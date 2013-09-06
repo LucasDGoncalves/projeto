@@ -1,6 +1,5 @@
 <?php
 require "banco.php";
-
 class querys {
 	private $con;
 	function __Construct() {
@@ -103,13 +102,26 @@ class querys {
 	}
 	
 	// Cria novo usuário na rede
+	//TODO: Tratar login repetido
 	function createUser($user_login, $user_name, $user_city) {
-		// cria cconecta ao banco
 		$this->con->conecta ();
 		
 		$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$user_login}', '{$user_name}', '{$user_city}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
+		$this->con->fecha ();
+	}
+	
+	// Cria um curtir
+	//TODO: tratar a tentativa de curtir uma banda já curtida
+	function addLike($user_login, $artist_uri, $rating) {
+		$artist_id = addArtist($artist_uri);
+		
+		$this->con->conecta ();
+	
+		$query = "INSERT into curtir (login, id_artista, onta) VALUES ('{$user_login}', '{$artist_uri}', '{$rating}')";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+	
 		$this->con->fecha ();
 	}
 	
@@ -124,21 +136,28 @@ class querys {
 		$this->con->fecha ();
 	}
 	
-	// Adiciona artista, retorna o id do artista
+	// Adiciona artista se o ainda não exite no BD 
+	// Retorna o id do artista
 	function addArtist($uri) {
 		// cria cconecta ao banco
 		$this->con->conecta ();
 		
-		$query = "INSERT into artista (nome_artistico) VALUES ('{$uri}')";
-		$res = mysql_query ( $query ) or die ( mysql_error () );
-		
 		$query = "SELECT id from artista where nome_artistico like '{$uri}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
-		$this->con->fecha();
+		if (mysql_num_rows ( $res ) == 0) {
+			$query = "INSERT into artista (nome_artistico) VALUES ('{$uri}')";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			$query = "SELECT id from artista where nome_artistico like '{$uri}'";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			$this->con->fecha ();
+		}
+		$this->con->fecha ();
 		
-		$row = mysql_fetch_array($res);
-		return $row['id'];
+		$row = mysql_fetch_array ( $res );
+		return $row ['id'];
 	}
 	
 	// Retorna todos os usuários da rede não conhecido pelo o $user_login
