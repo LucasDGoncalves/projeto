@@ -1,13 +1,14 @@
 <?php
+require "banco.php";
+
 class querys {
 	private $con;
 	function __Construct() {
 		$this->con = new banco ();
-		$this->con__Construct ();
 	}
 	function importData() {
 		// cria cconecta ao banco
-		$con->conecta ();
+		$this->con->conecta ();
 		
 		// XMLs fonte para inserção de dados no banco
 		$xml ['Person'] = 'http://www.ic.unicamp.br/~santanch/teaching/db/xml/person-20130906-0808.xml';
@@ -98,40 +99,57 @@ class querys {
 		}
 		echo "LikesMusics inseridos com sucesso! <br/><br/>";
 		
-		$con->fecha ();
+		$this->con->fecha ();
 	}
 	
 	// Cria novo usuário na rede
 	function createUser($user_login, $user_name, $user_city) {
 		// cria cconecta ao banco
-		$con->conecta ();
+		$this->con->conecta ();
 		
 		$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$user_login}', '{$user_name}', '{$user_city}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
-		$con->fecha ();
+		$this->con->fecha ();
 	}
 	
 	// Adiciona amigo
-	function createUser($user, $friend) {
+	function addFriend($user, $friend) {
 		// cria cconecta ao banco
-		$con->conecta ();
+		$this->con->conecta ();
 		
 		$query = "INSERT into conhecimento (conhecedor, conhecido) VALUES ('{$user}', '{$friend}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
-		$con->fecha ();
+		$this->con->fecha ();
+	}
+	
+	// Adiciona artista, retorna o id do artista
+	function addArtist($uri) {
+		// cria cconecta ao banco
+		$this->con->conecta ();
+		
+		$query = "INSERT into artista (nome_artistico) VALUES ('{$uri}')";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		$query = "SELECT id from artista where nome_artistico like '{$uri}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		$this->con->fecha();
+		
+		$row = mysql_fetch_array($res);
+		return $row['id'];
 	}
 	
 	// Retorna todos os usuários da rede não conhecido pelo o $user_login
 	function getUnKnownUsers($user_login) {
 		// cria cconecta ao banco
-		$con->conecta ();
+		$this->con->conecta ();
 		
 		$query = "SELECT * FROM mc536.pessoa where login <> '{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
-		$con->fecha ();
+		$this->con->fecha ();
 		
 		return $res;
 	}
