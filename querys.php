@@ -102,7 +102,7 @@ class querys {
 	}
 	
 	// Cria novo usuário na rede
-	//TODO: Tratar login repetido
+	// TODO: Tratar login repetido
 	function createUser($user_login, $user_name, $user_city) {
 		$this->con->conecta ();
 		
@@ -113,16 +113,20 @@ class querys {
 	}
 	
 	// Cria um curtir
-	//TODO: tratar a tentativa de curtir uma banda já curtida
+	// Retorna false se a banda já foi curtida
 	function addLike($user_login, $artist_uri, $rating) {
-		$artist_id = addArtist($artist_uri);
-		
+		$artist_id = addArtist ( $artist_uri );
 		$this->con->conecta ();
-	
-		$query = "INSERT into curtir (login, id_artista, onta) VALUES ('{$user_login}', '{$artist_uri}', '{$rating}')";
+		
+		$query = "SELECT * from curtir where login = '{$user_login}' and id_artista = '{$artist_id}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-	
-		$this->con->fecha ();
+		
+		if (mysql_num_rows ( $res ) == 0) {
+			$query = "INSERT into curtir (login, id_artista, nota) VALUES ('{$user_login}', '{$artist_uri}', '{$rating}')";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+		} else
+			$res = false;
+		return res;
 	}
 	
 	// Adiciona amigo
@@ -136,7 +140,7 @@ class querys {
 		$this->con->fecha ();
 	}
 	
-	// Adiciona artista se o ainda não exite no BD 
+	// Adiciona artista se o ainda não exite no BD
 	// Retorna o id do artista
 	function addArtist($uri) {
 		// cria cconecta ao banco
@@ -160,9 +164,20 @@ class querys {
 		return $row ['id'];
 	}
 	
+	// Retorna todos os usuários da rede
+	function getAllUsers() {
+		$this->con->conecta ();
+	
+		$query = "SELECT * FROM mc536.pessoa";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+	
+		$this->con->fecha ();
+	
+		return $res;
+	}
+	
 	// Retorna todos os usuários da rede não conhecido pelo o $user_login
 	function getUnKnownUsers($user_login) {
-		// cria cconecta ao banco
 		$this->con->conecta ();
 		
 		$query = "SELECT * FROM mc536.pessoa where login <> '{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
