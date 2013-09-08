@@ -14,24 +14,161 @@
     $( "#tabs" ).tabs();
   });
   </script>
-<script>
-  $(function() {
-    var availableTags = [
-<?php
-require 'querys.php';
-$q = new querys();
-$users = $q->getAllUsers();
-while ( $row = mysql_fetch_array( $users ) ) {
-	echo "'{$row['nome']}'";
-	if ( mysql_num_rows( $users ) > 0)
-		echo ",";
+<style>
+.custom-combobox {
+	position: relative;
+	display: inline-block;
 }
 
-?>
-    ];
-    $( "#tags" ).autocomplete({
-      source: availableTags
+.custom-combobox-toggle {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	margin-left: -1px;
+	padding: 0;
+	/* support: IE7 */
+	*height: 1.7em;
+	*top: 0.1em;
+}
+
+.custom-combobox-input {
+	margin: 0;
+	padding: 0.3em;
+}
+</style>
+<script>
+  (function( $ ) {
+    $.widget( "custom.combobox", {
+      _create: function() {
+        this.wrapper = $( "<span>" )
+          .addClass( "custom-combobox" )
+          .insertAfter( this.element );
+ 
+        this.element.hide();
+        this._createAutocomplete();
+        this._createShowAllButton();
+      },
+ 
+      _createAutocomplete: function() {
+        var selected = this.element.children( ":selected" ),
+          value = selected.val() ? selected.text() : "";
+ 
+        this.input = $( "<input>" )
+          .appendTo( this.wrapper )
+          .val( value )
+          .attr( "title", "" )
+          .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+          .autocomplete({
+            delay: 0,
+            minLength: 0,
+            source: $.proxy( this, "_source" )
+          })
+          .tooltip({
+            tooltipClass: "ui-state-highlight"
+          });
+ 
+        this._on( this.input, {
+          autocompleteselect: function( event, ui ) {
+            ui.item.option.selected = true;
+            this._trigger( "select", event, {
+              item: ui.item.option
+            });
+          },
+ 
+          autocompletechange: "_removeIfInvalid"
+        });
+      },
+ 
+      _createShowAllButton: function() {
+        var input = this.input,
+          wasOpen = false;
+ 
+        $( "<a>" )
+          .attr( "tabIndex", -1 )
+          .attr( "title", "Show All Items" )
+          .tooltip()
+          .appendTo( this.wrapper )
+          .button({
+            icons: {
+              primary: "ui-icon-triangle-1-s"
+            },
+            text: false
+          })
+          .removeClass( "ui-corner-all" )
+          .addClass( "custom-combobox-toggle ui-corner-right" )
+          .mousedown(function() {
+            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
+          })
+          .click(function() {
+            input.focus();
+ 
+            // Close if already visible
+            if ( wasOpen ) {
+              return;
+            }
+ 
+            // Pass empty string as value to search for, displaying all results
+            input.autocomplete( "search", "" );
+          });
+      },
+ 
+      _source: function( request, response ) {
+        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
+        response( this.element.children( "option" ).map(function() {
+          var text = $( this ).text();
+          if ( this.value && ( !request.term || matcher.test(text) ) )
+            return {
+              label: text,
+              value: text,
+              option: this
+            };
+        }) );
+      },
+ 
+      _removeIfInvalid: function( event, ui ) {
+ 
+        // Selected an item, nothing to do
+        if ( ui.item ) {
+          return;
+        }
+ 
+        // Search for a match (case-insensitive)
+        var value = this.input.val(),
+          valueLowerCase = value.toLowerCase(),
+          valid = false;
+        this.element.children( "option" ).each(function() {
+          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
+            this.selected = valid = true;
+            return false;
+          }
+        });
+ 
+        // Found a match, nothing to do
+        if ( valid ) {
+          return;
+        }
+ 
+        // Remove invalid value
+        this.input
+          .val( "" )
+          .attr( "title", value + " didn't match any item" )
+          .tooltip( "open" );
+        this.element.val( "" );
+        this._delay(function() {
+          this.input.tooltip( "close" ).attr( "title", "" );
+        }, 2500 );
+        this.input.data( "ui-autocomplete" ).term = "";
+      },
+ 
+      _destroy: function() {
+        this.wrapper.remove();
+        this.element.show();
+      }
     });
+  })( jQuery );
+ 
+  $(function() {
+    $( "#combobox" ).combobox();
   });
   </script>
 </head>
@@ -41,8 +178,8 @@ while ( $row = mysql_fetch_array( $users ) ) {
 	<div id="tabs">
 		<ul>
 			<li><a href="#tabs-1">Home</a></li>
-			<li><a href="#tabs-2">Friends</a></li>
-			<li><a href="#tabs-3">Musics</a></li>
+			<li><a href="#tabs-2">Amigos</a></li>
+			<li><a href="#tabs-3">Artistas</a></li>
 		</ul>
 		<div id="tabs-1">
 			<p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a,
@@ -57,7 +194,20 @@ while ( $row = mysql_fetch_array( $users ) ) {
 		</div>
 		<div id="tabs-2">
 			<div class="ui-widget">
-				<label for="tags">Pessoas: </label> <input id="tags" />
+				<div class="ui-widget">
+					<label>Pessoas: </label> <select id="combobox">
+						<option value=""></option>
+				<?php
+				require 'querys.php';
+				$q = new querys ();
+				$users = $q->getAllUsers ();
+				while ( $row = mysql_fetch_array ( $users ) ) {
+					echo "<option value='{$row['login']}'>{$row['nome']}</option>";
+				}
+				?>
+			</select>
+				</div>
+				<button id="add">Adicionar</button>
 			</div>
 		</div>
 		<div id="tabs-3">
@@ -80,7 +230,5 @@ while ( $row = mysql_fetch_array( $users ) ) {
 				hendrerit hendrerit.</p>
 		</div>
 	</div>
-
-
 </body>
 </html>
