@@ -115,18 +115,19 @@ class querys {
 	// Cria um curtir
 	// Retorna false se a banda já foi curtida
 	function addLike($user_login, $artist_uri, $rating) {
-		$artist_id = addArtist ( $artist_uri );
+		$artist_id = $this->addArtist($artist_uri);
 		$this->con->conecta ();
 		
-		$query = "SELECT * from curtir where login = '{$user_login}' and id_artista = '{$artist_id}'";
+		$query = "SELECT * from curtida where login = '{$user_login}' and id_artista = '{$artist_id}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		if (mysql_num_rows ( $res ) == 0) {
-			$query = "INSERT into curtir (login, id_artista, nota) VALUES ('{$user_login}', '{$artist_uri}', '{$rating}')";
+			$query = "INSERT into curtida (login, id_artista, nota) VALUES ('{$user_login}', '{$artist_uri}', '{$rating}')";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
-		} else
+		} else{
 			$res = false;
-		return res;
+		}
+		return $res;
 	}
 	
 	// Adiciona amigo
@@ -156,31 +157,54 @@ class querys {
 			$query = "SELECT id from artista where nome_artistico like '{$uri}'";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 			
-			$this->con->fecha ();
 		}
-		$this->con->fecha ();
 		
 		$row = mysql_fetch_array ( $res );
+		$this->con->fecha ();
 		return $row ['id'];
+	}
+	
+	// Retorna todos os artistas cadastrados
+	function getAllArtists() {
+		$this->con->conecta ();
+	
+		$query = "SELECT * FROM artista";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		$allArtists= array();
+		$i=0;
+		while ($rs = mysql_fetch_assoc($res)){
+			$allArtists[$i]['id'] = $rs['id'];
+			$allArtists[$i++]['name'] = $rs['nome_artistico'];
+		}
+	
+		$this->con->fecha ();
+	
+		return $allArtists;
 	}
 	
 	// Retorna todos os usuários da rede
 	function getAllUsers() {
 		$this->con->conecta ();
 	
-		$query = "SELECT * FROM mc536.pessoa";
+		$query = "SELECT * FROM pessoa";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-	
+		$allUsers = array();
+		$i=0;
+		while ($rs = mysql_fetch_assoc($res)){
+			$allUsers[$i]['login'] = $rs['login'];	
+			$allUsers[$i++]['name'] = $rs['nome'];
+		}
+		
 		$this->con->fecha ();
 	
-		return $res;
+		return $allUsers;
 	}
 	
 	// Retorna todos os usuários da rede não conhecido pelo o $user_login
 	function getUnKnownUsers($user_login) {
 		$this->con->conecta ();
 		
-		$query = "SELECT * FROM mc536.pessoa where login <> '{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
+		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		$this->con->fecha ();

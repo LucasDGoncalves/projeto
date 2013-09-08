@@ -1,234 +1,63 @@
-<!doctype html>
-<html lang="en">
+<?php
 
-<head>
-<meta charset="utf-8" />
-<title>jQuery UI Tabs - Default functionality</title>
-<link rel="stylesheet"
-	href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-<link rel="stylesheet" href="/resources/demos/style.css" />
-<script>
-  $(function() {
-    $( "#tabs" ).tabs();
-  });
-  </script>
-<style>
-.custom-combobox {
-	position: relative;
-	display: inline-block;
+include_once "banco.php";
+
+echo "<meta charset='utf-8' />";
+echo "<title>Social Book</title>";
+echo "<link rel='stylesheet' href='css/jquery-ui.css' />";
+echo "<script type='text/javascript' src='js/jquery-2.0.3.js'></script>";
+echo "<script src='js/jquery-ui.js'></script>";
+echo "<script type='text/javascript' src='js/index.js'></script>";
+echo "<link rel='stylesheet' href='css/index.css' />";
+echo "<script type='text/javascript' src='js/jquery.asmselect.js'></script>";
+echo "<link rel='stylesheet' href='css/jquery.asmselect.css' />";
+
+
+
+if (isset($_POST['submit']) && $_POST['submit']=='Login'){
+	//tentativa de logar, ver senha para decidir se dá acesso ou não
+
+	if ($_POST['password'] == $_POST['username']){
+		$_SESSION['logado'] = true;
+		echo "Usuário logado com sucesso</br>";
+		
+	}
+	else{
+		echo "usuário ou senha incorretos</br>";
+		
+	}
 }
 
-.custom-combobox-toggle {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	margin-left: -1px;
-	padding: 0;
-	/* support: IE7 */
-	*height: 1.7em;
-	*top: 0.1em;
+if (isset($_SESSION['logado']) && $_SESSION['logado']){
+	//mostrar tela inicial do sistema
+	echo "<div id='tabs'>";
+	echo"<ul>
+	<li><a href='#tabs-1'>Home</a></li>
+	<li><a href='#tabs-2'>Amigos</a></li>
+	<li><a href='#tabs-3'>Artistas</a></li>
+	</ul>";
+	
+	echo "<div id='tabs-1'>";
+	echo "<button id='display_register'>cadastrar Usuário</button>";
+	echo "<button id='button_list'>Listar usuários</button>";
+	echo "<div id='conteudo'></div> </div>";
+	
+	echo "<div id='tabs-2'>  <p>Amigos</p>  </div>";
+	echo "<div id='tabs-3'>  <p>Artistas</p>  </div>";
+	echo "</div>";
+	
+}
+else{
+	//mostrar tela de login
+	echo "<form action='index.php' method='POST'>
+			Usuário: <input type='text' name='username'>
+			Senha: <input type='password' name='password'>
+			<input type='submit' value='Login' name='submit'>
+			</form>";
+	
+	
+	
 }
 
-.custom-combobox-input {
-	margin: 0;
-	padding: 0.3em;
-}
-</style>
-<script>
-  (function( $ ) {
-    $.widget( "custom.combobox", {
-      _create: function() {
-        this.wrapper = $( "<span>" )
-          .addClass( "custom-combobox" )
-          .insertAfter( this.element );
- 
-        this.element.hide();
-        this._createAutocomplete();
-        this._createShowAllButton();
-      },
- 
-      _createAutocomplete: function() {
-        var selected = this.element.children( ":selected" ),
-          value = selected.val() ? selected.text() : "";
- 
-        this.input = $( "<input>" )
-          .appendTo( this.wrapper )
-          .val( value )
-          .attr( "title", "" )
-          .addClass( "custom-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
-          .autocomplete({
-            delay: 0,
-            minLength: 0,
-            source: $.proxy( this, "_source" )
-          })
-          .tooltip({
-            tooltipClass: "ui-state-highlight"
-          });
- 
-        this._on( this.input, {
-          autocompleteselect: function( event, ui ) {
-            ui.item.option.selected = true;
-            this._trigger( "select", event, {
-              item: ui.item.option
-            });
-          },
- 
-          autocompletechange: "_removeIfInvalid"
-        });
-      },
- 
-      _createShowAllButton: function() {
-        var input = this.input,
-          wasOpen = false;
- 
-        $( "<a>" )
-          .attr( "tabIndex", -1 )
-          .attr( "title", "Show All Items" )
-          .tooltip()
-          .appendTo( this.wrapper )
-          .button({
-            icons: {
-              primary: "ui-icon-triangle-1-s"
-            },
-            text: false
-          })
-          .removeClass( "ui-corner-all" )
-          .addClass( "custom-combobox-toggle ui-corner-right" )
-          .mousedown(function() {
-            wasOpen = input.autocomplete( "widget" ).is( ":visible" );
-          })
-          .click(function() {
-            input.focus();
- 
-            // Close if already visible
-            if ( wasOpen ) {
-              return;
-            }
- 
-            // Pass empty string as value to search for, displaying all results
-            input.autocomplete( "search", "" );
-          });
-      },
- 
-      _source: function( request, response ) {
-        var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
-        response( this.element.children( "option" ).map(function() {
-          var text = $( this ).text();
-          if ( this.value && ( !request.term || matcher.test(text) ) )
-            return {
-              label: text,
-              value: text,
-              option: this
-            };
-        }) );
-      },
- 
-      _removeIfInvalid: function( event, ui ) {
- 
-        // Selected an item, nothing to do
-        if ( ui.item ) {
-          return;
-        }
- 
-        // Search for a match (case-insensitive)
-        var value = this.input.val(),
-          valueLowerCase = value.toLowerCase(),
-          valid = false;
-        this.element.children( "option" ).each(function() {
-          if ( $( this ).text().toLowerCase() === valueLowerCase ) {
-            this.selected = valid = true;
-            return false;
-          }
-        });
- 
-        // Found a match, nothing to do
-        if ( valid ) {
-          return;
-        }
- 
-        // Remove invalid value
-        this.input
-          .val( "" )
-          .attr( "title", value + " didn't match any item" )
-          .tooltip( "open" );
-        this.element.val( "" );
-        this._delay(function() {
-          this.input.tooltip( "close" ).attr( "title", "" );
-        }, 2500 );
-        this.input.data( "ui-autocomplete" ).term = "";
-      },
- 
-      _destroy: function() {
-        this.wrapper.remove();
-        this.element.show();
-      }
-    });
-  })( jQuery );
- 
-  $(function() {
-    $( "#combobox" ).combobox();
-  });
-  </script>
-</head>
 
-<body>
-
-	<div id="tabs">
-		<ul>
-			<li><a href="#tabs-1">Home</a></li>
-			<li><a href="#tabs-2">Amigos</a></li>
-			<li><a href="#tabs-3">Artistas</a></li>
-		</ul>
-		<div id="tabs-1">
-			<p>Proin elit arcu, rutrum commodo, vehicula tempus, commodo a,
-				risus. Curabitur nec arcu. Donec sollicitudin mi sit amet mauris.
-				Nam elementum quam ullamcorper ante. Etiam aliquet massa et lorem.
-				Mauris dapibus lacus auctor risus. Aenean tempor ullamcorper leo.
-				Vivamus sed magna quis ligula eleifend adipiscing. Duis orci.
-				Aliquam sodales tortor vitae ipsum. Aliquam nulla. Duis aliquam
-				molestie erat. Ut et mauris vel pede varius sollicitudin. Sed ut
-				dolor nec orci tincidunt interdum. Phasellus ipsum. Nunc tristique
-				tempus lectus.</p>
-		</div>
-		<div id="tabs-2">
-			<div class="ui-widget">
-				<div class="ui-widget">
-					<label>Pessoas: </label> <select id="combobox">
-						<option value=""></option>
-				<?php
-				require 'querys.php';
-				$q = new querys ();
-				$users = $q->getAllUsers ();
-				while ( $row = mysql_fetch_array ( $users ) ) {
-					echo "<option value='{$row['login']}'>{$row['nome']}</option>";
-				}
-				?>
-			</select>
-				</div>
-				<button id="add">Adicionar</button>
-			</div>
-		</div>
-		<div id="tabs-3">
-			<p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti.
-				Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat,
-				eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent
-				taciti sociosqu ad litora torquent per conubia nostra, per inceptos
-				himenaeos. Fusce sodales. Quisque eu urna vel enim commodo
-				pellentesque. Praesent eu risus hendrerit ligula tempus pretium.
-				Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
-			<p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at,
-				semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra
-				justo vitae neque. Praesent blandit adipiscing velit. Suspendisse
-				potenti. Donec mattis, pede vel pharetra blandit, magna ligula
-				faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque.
-				Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi
-				lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean
-				vehicula velit eu tellus interdum rutrum. Maecenas commodo.
-				Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus
-				hendrerit hendrerit.</p>
-		</div>
-	</div>
-</body>
-</html>
+?>

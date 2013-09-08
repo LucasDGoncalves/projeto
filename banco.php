@@ -7,10 +7,10 @@ class banco {
 	public $cn;
 	
 	function __Construct() {
-		$this->servidor = "localhost:8889";
+		$this->servidor = "localhost";
 		$this->usuario = "root";
 		$this->database = "mc536";
-		$this->password = "root";
+		$this->password = "";
 	}
 	
 	function conecta() {
