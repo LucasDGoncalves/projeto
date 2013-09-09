@@ -198,11 +198,12 @@ class querys {
 		
 		$query = "SELECT * FROM pessoa";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		$allUsers = array ();
-		$i = 0;
-		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			$allUsers [$i] ['login'] = $rs ['login'];
-			$allUsers [$i ++] ['name'] = $rs ['nome'];
+		$allUsers = array();
+		$i=0;
+		while ($rs = mysql_fetch_assoc($res)){
+			$allUsers[$i]['login'] = $rs['login'];
+			$allUsers[$i]['city'] = $rs['cidade_natal'];
+			$allUsers[$i++]['name'] = $rs['nome'];
 		}
 		
 		$this->con->fecha ();
