@@ -1,5 +1,5 @@
 <?php
-require "banco.php";
+include_once "banco.php";
 class querys {
 	private $con;
 	function __Construct() {
@@ -115,7 +115,7 @@ class querys {
 	// Cria um curtir
 	// Retorna false se a banda já foi curtida
 	function addLike($user_login, $artist_uri, $rating) {
-		$artist_id = $this->addArtist($artist_uri);
+		$artist_id = $this->addArtist ( $artist_uri );
 		$this->con->conecta ();
 		
 		$query = "SELECT * from curtida where login = '{$user_login}' and id_artista = '{$artist_id}'";
@@ -124,7 +124,7 @@ class querys {
 		if (mysql_num_rows ( $res ) == 0) {
 			$query = "INSERT into curtida (login, id_artista, nota) VALUES ('{$user_login}', '{$artist_uri}', '{$rating}')";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
-		} else{
+		} else {
 			$res = false;
 		}
 		return $res;
@@ -139,6 +139,19 @@ class querys {
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		$this->con->fecha ();
+	}
+	
+	// Retorna usuário
+	function getUser($user) {
+		// cria cconecta ao banco
+		$this->con->conecta ();
+		
+		$query = "SELECT * FROM pessoa where login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		$this->con->fecha ();
+		
+		return $res;
 	}
 	
 	// Adiciona artista se o ainda não exite no BD
@@ -156,7 +169,6 @@ class querys {
 			
 			$query = "SELECT id from artista where nome_artistico like '{$uri}'";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
-			
 		}
 		
 		$row = mysql_fetch_array ( $res );
@@ -167,36 +179,36 @@ class querys {
 	// Retorna todos os artistas cadastrados
 	function getAllArtists() {
 		$this->con->conecta ();
-	
+		
 		$query = "SELECT * FROM artista";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		$allArtists= array();
-		$i=0;
-		while ($rs = mysql_fetch_assoc($res)){
-			$allArtists[$i]['id'] = $rs['id'];
-			$allArtists[$i++]['name'] = $rs['nome_artistico'];
+		$allArtists = array ();
+		$i = 0;
+		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+			$allArtists [$i] ['id'] = $rs ['id'];
+			$allArtists [$i ++] ['name'] = $rs ['nome_artistico'];
 		}
-	
+		
 		$this->con->fecha ();
-	
+		
 		return $allArtists;
 	}
 	
 	// Retorna todos os usuários da rede
 	function getAllUsers() {
 		$this->con->conecta ();
-	
+		
 		$query = "SELECT * FROM pessoa";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		$allUsers = array();
-		$i=0;
-		while ($rs = mysql_fetch_assoc($res)){
-			$allUsers[$i]['login'] = $rs['login'];	
-			$allUsers[$i++]['name'] = $rs['nome'];
+		$allUsers = array ();
+		$i = 0;
+		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+			$allUsers [$i] ['login'] = $rs ['login'];
+			$allUsers [$i ++] ['name'] = $rs ['nome'];
 		}
 		
 		$this->con->fecha ();
-	
+		
 		return $allUsers;
 	}
 	
