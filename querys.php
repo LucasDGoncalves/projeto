@@ -9,7 +9,7 @@ class querys {
 		// cria cconecta ao banco
 		$this->con->conecta ();
 		
-		// XMLs fonte para inserção de dados no banco
+		// XMLs fonte para inserÃ§Ã£o de dados no banco
 		$xml ['Person'] = 'http://www.ic.unicamp.br/~santanch/teaching/db/xml/person-20130906-0808.xml';
 		$xml ['Knows'] = 'http://www.ic.unicamp.br/~santanch/teaching/db/xml/knows-20130906-0835.xml';
 		$xml ['LikesMusic'] = 'http://www.ic.unicamp.br/~santanch/teaching/db/xml/likesMusic-20130906-0852.xml';
@@ -22,9 +22,9 @@ class querys {
 		} else {
 			// itera em cada registro de pessoa no XML
 			foreach ( $loaded->Person as $element ) {
-				// conversão do nome da cidade, estava ficando com caracteres quebrados
+				// conversÃ£o do nome da cidade, estava ficando com caracteres quebrados
 				$cidade = utf8_decode ( $element->attributes ()->hometown );
-				// cria a query de inserção
+				// cria a query de inserÃ§Ã£o
 				$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$element->attributes()->uri}', '{$element->attributes()->name}', '{$cidade}')";
 				
 				// executa a query ou falha e exibe a mensagem de erro do MySQL
@@ -42,7 +42,7 @@ class querys {
 		} else {
 			// itera em cada registro de knows no XML
 			foreach ( $loaded->Knows as $element ) {
-				// cria a query de inserção
+				// cria a query de inserÃ§Ã£o
 				$query = "INSERT into conhecimento (conhecedor, conhecido) VALUES ('{$element->attributes()->person}', '{$element->attributes()->colleague}')";
 				
 				// executa a query ou falha e exibe a mensagem de erro do MySQL
@@ -60,17 +60,17 @@ class querys {
 		} else {
 			$array_artistas = array ();
 			$id = 1;
-			// carrega usando XPath apenas artistas que há no XML de likes
+			// carrega usando XPath apenas artistas que hÃ¡ no XML de likes
 			$artistas = $loaded->xpath ( "//@bandUri" );
-			// armazena todos artistas num vetor usando como chave o "nome" para evitar repetição (na verdade, usa-se o link da wikipedia no momento)
+			// armazena todos artistas num vetor usando como chave o "nome" para evitar repetiÃ§Ã£o (na verdade, usa-se o link da wikipedia no momento)
 			foreach ( $artistas as $element ) {
 				if (! isset ( $array_artistas ["{$element->bandUri}"] )) {
 					$array_artistas ["{$element->bandUri}"] = $id ++;
 				}
 			}
 			
-			// montagem da query de inserção de cada chave única de nome de artista na tabela artista.
-			// O id está sendo gerado aqui apenas para facilitar a manipulação da relação de like->banda, id é auto_increment na verdade
+			// montagem da query de inserÃ§Ã£o de cada chave Ãºnica de nome de artista na tabela artista.
+			// O id estÃ¡ sendo gerado aqui apenas para facilitar a manipulaÃ§Ã£o da relaÃ§Ã£o de like->banda, id Ã© auto_increment na verdade
 			$query = "INSERT into artista (id, nome_artistico) VALUES ";
 			$query_array = array ();
 			foreach ( $array_artistas as $name => $t_id ) {
@@ -79,7 +79,7 @@ class querys {
 			}
 			$query .= implode ( ", ", $query_array );
 			
-			// executa query de inserção de artistas
+			// executa query de inserÃ§Ã£o de artistas
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 			
 			echo "Artistas inseridos com sucesso! <br/><br/>";
@@ -87,9 +87,9 @@ class querys {
 			// itera em cada registro de Likes no XML
 			foreach ( $loaded->LikesMusic as $like ) {
 				// busca no vetor pela chave do nome da banda para obter o id, que foi o mesmo que foi cadastrado no banco
-				// como a inserção de artistas no array e no banco foi feita na mesma ordem o id é o mesmo que seria caso tivesse sido deixado para o MySQL gerar no auto_increment
+				// como a inserÃ§Ã£o de artistas no array e no banco foi feita na mesma ordem o id Ã© o mesmo que seria caso tivesse sido deixado para o MySQL gerar no auto_increment
 				$id_banda = $array_artistas ["{$like->attributes()->bandUri}"];
-				// monta a query de inserção de like
+				// monta a query de inserÃ§Ã£o de like
 				$query2 = "INSERT into curtida (login, id_artista, nota) VALUES ('{$like->attributes()->person}', {$id_banda}, '{$like->attributes()->rating}')";
 				
 				// executa a query ou falha e exibe a mensagem de erro do MySQL
@@ -101,7 +101,7 @@ class querys {
 		$this->con->fecha ();
 	}
 	
-	// Cria novo usuário na rede
+	// Cria novo usuÃ¡rio na rede
 	// TODO: Tratar login repetido
 	function createUser($user_login, $user_name, $user_city) {
 		$this->con->conecta ();
@@ -113,7 +113,7 @@ class querys {
 	}
 	
 	// Cria um curtir
-	// Retorna false se a banda já foi curtida
+	// Retorna false se a banda jÃ¡ foi curtida
 	function addLike($user_login, $artist_uri, $rating) {
 		$artist_id = $this->addArtist ( $artist_uri );
 		$this->con->conecta ();
@@ -141,9 +141,8 @@ class querys {
 		$this->con->fecha ();
 	}
 	
-	// Retorna usuário
+	// Retorna UsuÃ¡rio
 	function getUser($user) {
-		// cria cconecta ao banco
 		$this->con->conecta ();
 		
 		$query = "SELECT * FROM pessoa where login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}'";
@@ -154,10 +153,9 @@ class querys {
 		return $res;
 	}
 	
-	// Adiciona artista se o ainda não exite no BD
+	// Adiciona artista se o ainda nÃ£o exite no BD
 	// Retorna o id do artista
 	function addArtist($uri) {
-		// cria cconecta ao banco
 		$this->con->conecta ();
 		
 		$query = "SELECT id from artista where nome_artistico like '{$uri}'";
@@ -194,7 +192,7 @@ class querys {
 		return $allArtists;
 	}
 	
-	// Retorna todos os usuários da rede
+	// Retorna todos os usuÃ¡rios da rede
 	function getAllUsers() {
 		$this->con->conecta ();
 		
@@ -212,11 +210,23 @@ class querys {
 		return $allUsers;
 	}
 	
-	// Retorna todos os usuários da rede não conhecido pelo o $user_login
+	// Retorna todos os usuÃ¡rios da rede nÃ£o conhecido pelo o $user_login
 	function getUnKnownUsers($user_login) {
 		$this->con->conecta ();
 		
 		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		$this->con->fecha ();
+		
+		return $res;
+	}
+	
+	// Retorna os amigos de $user_login
+	function getUnKnownUsers($user_login) {
+		$this->con->conecta ();
+		
+		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		$this->con->fecha ();

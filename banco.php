@@ -14,7 +14,7 @@ class banco {
 	}
 	
 	function conecta() {
-		$this->cn = mysql_connect ( $this->servidor, $this->usuario, $this->password ) or die ( "Falha na conexão com o banco de dados!" );
+		$this->cn = mysql_connect ( $this->servidor, $this->usuario, $this->password ) or die ( "Falha na conexÃ£o com o banco de dados!" );
 		mysql_select_db ( $this->database, $this->cn );
 	}
 	

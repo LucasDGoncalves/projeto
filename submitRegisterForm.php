@@ -14,5 +14,5 @@ foreach ($_POST['artists'] as $artist_id){
 	$querys->addLike($_POST['login'], $artist_id, 5);
 }
 
-echo "Usuário cadastrado com sucesso";
+echo "UsuÃ¡rio cadastrado com sucesso";
 ?>

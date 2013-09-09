@@ -15,7 +15,7 @@ echo "<link rel='stylesheet' href='css/jquery.asmselect.css' />";
 $querys = new querys ();
 
 if (isset ( $_POST ['submit'] ) && $_POST ['submit'] == 'Login') {
-	// tentativa de logar, ver senha para decidir se d· acesso ou n„o
+	// tentativa de logar, ver senha para decidir se d√° acesso ou n√£o
 	$res = $querys->getUser ( $_POST ['username'] );
 	$user = mysql_fetch_array ( $res );
 	
@@ -23,9 +23,9 @@ if (isset ( $_POST ['submit'] ) && $_POST ['submit'] == 'Login') {
 		$_SESSION ['logado'] = true;
 		$_SESSION ['username'] = $_POST ['username'];
 		$_SESSION ['name'] = $user ['nome'];
-		$_SESSION ['city'] = $user ['cidade'];
+		$_SESSION ['city'] = $user ['cidade_natal'];
 	} else {
-		echo "usu·rio ou senha incorretos</br>";
+		echo "Usu√°rio ou senha incorretos</br>";
 	}
 }
 
@@ -39,7 +39,7 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 	</ul>";
 	
 	echo "<div id='tabs-1'>";
-	echo "<button id='display_register'>Cadastrar Usu·rio</button>";
+	echo "<button id='display_register'>Cadastrar Usu√°rio</button>";
 	echo "<div id='conteudo'></div> </div>";
 	
 	echo "<div id='tabs-2'>  <p>Amigos</p>  </div>";
@@ -48,7 +48,7 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 } else {
 	// mostrar tela de login
 	echo "<form action='index.php' method='POST'>
-			Usu·rio: <input type='text' name='username'>
+			Usu√°rio: <input type='text' name='username'>
 			Senha: <input type='password' name='password'>
 			<input type='submit' value='Login' name='submit'>
 			</form>";
