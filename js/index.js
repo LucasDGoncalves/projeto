@@ -44,9 +44,23 @@ $(document).ready(function(){
 	});
 	
 	$('#button_list').click(function(){
-		
-		alert("trazer listas");
-	});
+			
+			$.ajax({
+				  url: "listUsers.php",
+				}).done(function( msg ) {
+					$( "#conteudo" ).html(msg);
+					
+				    $("#usersList") 
+				    .tablesorter({widthFixed: true, widgets: ['zebra']}) 
+				    .tablesorterPager({container: $("#pager")}); 
+
+				   $("#large").tablesorter({
+				     // striping looking
+				     widgets: ['zebra']	
+				   });
+					
+				});
+		});
 	
   (function( $ ) {
 	    $.widget( "custom.combobox", {

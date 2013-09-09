@@ -191,7 +191,8 @@ class querys {
 		$allUsers = array();
 		$i=0;
 		while ($rs = mysql_fetch_assoc($res)){
-			$allUsers[$i]['login'] = $rs['login'];	
+			$allUsers[$i]['login'] = $rs['login'];
+			$allUsers[$i]['city'] = $rs['cidade_natal'];
 			$allUsers[$i++]['name'] = $rs['nome'];
 		}
 		

@@ -11,7 +11,8 @@ echo "<script type='text/javascript' src='js/index.js'></script>";
 echo "<link rel='stylesheet' href='css/index.css' />";
 echo "<script type='text/javascript' src='js/jquery.asmselect.js'></script>";
 echo "<link rel='stylesheet' href='css/jquery.asmselect.css' />";
-
+echo "<script type='text/javascript' src='js/jquery.tablesorter.js'></script>";
+echo "<script type='text/javascript' src='js/jquery.tablesorter.pager.js'></script>";
 
 
 if (isset($_POST['submit']) && $_POST['submit']=='Login'){
