@@ -35,9 +35,9 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 	// mostrar tela inicial do sistema
 	echo "<div id='tabs'>";
 	echo "<ul>
-	<li><a href='#tabs-1'>Home</a></li>
-	<li><a href='#tabs-2'>Amigos</a></li>
-	<li><a href='#tabs-3'>Artistas</a></li>
+	<li><a id='tab1_button' href='#tabs-1'>Home</a></li>
+	<li><a id='tab2_button' href='#tabs-2'>Usuário</a></li>
+	<li><a id='tab3_button' href='#tabs-3'>Artistas</a></li>
 	</ul>";
 	
 	echo "<div id='tabs-1'>";
@@ -45,7 +45,7 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
   echo "<button id='button_list'>Listar usuários</button>";
 	echo "<div id='conteudo'></div> </div>";
 	
-	echo "<div id='tabs-2'>  <p>Amigos</p>  </div>";
+	echo "<div id='tabs-2'>  <div id='conteudo-2'></div>  </div>";
 	echo "<div id='tabs-3'>  <p>Artistas</p>  </div>";
 	echo "</div>";
 } else {

@@ -14,12 +14,7 @@ $(document).ready(function(){
 				
 				$("select[multiple]").asmSelect({
 					addItemTarget: 'bottom',
-					animate: true,
-					highlight: true,
-					sortable: true,
-					removeLabel: 'remover X', 
-					highlightRemovedLabel: 'Removido',
-					highlightAddedLabel: 'Adicionado'
+					removeLabel: 'remover X'
 				});
 				
 			});
@@ -53,20 +48,68 @@ $(document).ready(function(){
 				    $("#usersList") 
 				    .tablesorter({widthFixed: true, widgets: ['zebra']}) 
 				    .tablesorterPager({container: $("#pager")}); 
-
-				   $("#large").tablesorter({
-				     // striping looking
-				     widgets: ['zebra']	
-				   });
 					
 				});
 		});
 	
 	loadUser = function(login){
-		alert (login);
+		$("#tab2_button").trigger('click');
+		params = new Object();
+		params.login = login;
+		$.ajax({
+			  type : 'POST',
+			  url: "loadUser.php",
+			  data : params
+			}).done(function( msg ) {
+				$( "#conteudo-2" ).html(msg);
+				
+			});
+		
 	};
 	
-
+	$('#conteudo-2').delegate('#button_cancel', 'click', function() {
+		$('#button_cancel').hide();
+		$('#button_save').hide();
+		$('#button_edit').show();
+		
+		//habilitar campos de pessoa
+		$('#edit_name').prop('disabled', true);
+		$('#edit_city').prop('disabled', true);
+		$('#edit_login').prop('disabled', true);
+		
+	});
+	
+	$('#conteudo-2').delegate('#button_edit', 'click', function() {
+		//transformar botao editar em salvar e cancelar
+		$('#button_edit').hide();
+		$('#button_cancel').show();
+		$('#button_save').show();
+		
+		//habilitar campos de pessoa
+		$('#edit_name').prop('disabled', false);
+		$('#edit_city').prop('disabled', false);
+		$('#edit_login').prop('disabled', false);
+		
+		params = new Object();
+		params.login = $('#edit_login').val();
+		
+		//habilitar campos de amigos e artistas
+		$.ajax({
+			  	type : 'POST',
+				url: "getEditForms.php",
+				data : params,
+			}).done(function( msg ) {
+				$( "#combos" ).html(msg);
+				
+				$("select[multiple]").asmSelect({
+					addItemTarget: 'bottom',
+					sortable: true,
+					removeLabel: 'remover X'
+				});
+				
+			});
+	});
+	
     $.widget( "custom.combobox", {
       _create: function() {
         this.wrapper = $( "<span>" )

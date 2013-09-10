@@ -153,6 +153,35 @@ class querys {
 		return $res;
 	}
 	
+	// Retorna Usuário
+	function getCompleteUser($user) {
+		$this->con->conecta ();
+	
+		//traz usuario
+		$query_base = "SELECT * FROM pessoa where login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}'";
+		$res = mysql_query ( $query_base ) or die ( mysql_error () );
+		$userData = mysql_fetch_assoc($res);
+		$userData['amigos'] = array();
+		$userData['artistas'] = array();
+		
+		//traz amigos
+		$query_friend = "SELECT nome, cidade_natal, conhecido FROM conhecimento, pessoa where conhecedor like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}' AND pessoa.login=conhecimento.conhecido";
+		$res = mysql_query ( $query_friend ) or die ( mysql_error () );
+		while ($rs = mysql_fetch_assoc($res)){
+			$userData['amigos'][] = $rs;
+		}
+		//traz artistas favoritos
+		$query_artist = "SELECT nome_artistico, nota FROM artista, curtida WHERE login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}' AND id_artista=artista.id ";
+		$res = mysql_query ( $query_artist ) or die ( mysql_error () );
+		while ($rs = mysql_fetch_assoc($res)){
+			$userData['artistas'][] = $rs;
+		}
+		
+		$this->con->fecha ();
+	
+		return $userData;
+	}
+	
 	// Adiciona artista se o ainda não exite no BD
 	// Retorna o id do artista
 	function addArtist($uri) {
@@ -217,10 +246,13 @@ class querys {
 		
 		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		
+		$unknown = array();
+		while($rs = mysql_fetch_assoc($res)){
+			$unknown[] = $rs;
+		}
 		$this->con->fecha ();
 		
-		return $res;
+		return $unknown;
 	}
 	
 	// Retorna os amigos de $user_login
@@ -229,9 +261,12 @@ class querys {
 		
 		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		
+		$known = array();
+		while($rs = mysql_fetch_assoc($res)){
+			$known[] = $rs;
+		}
 		$this->con->fecha ();
 		
-		return $res;
+		return $known;
 	}
 }
