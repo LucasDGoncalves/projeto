@@ -224,7 +224,7 @@ class querys {
 	}
 	
 	// Retorna os amigos de $user_login
-	function getUnKnownUsers($user_login) {
+	function getKnownUsers($user_login) {
 		$this->con->conecta ();
 		
 		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login in (select conhecido from conhecimento where conhecedor = '{$user_login}')";

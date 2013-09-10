@@ -42,6 +42,7 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 	
 	echo "<div id='tabs-1'>";
 	echo "<button id='display_register'>Cadastrar Usuário</button>";
+  echo "<button id='button_list'>Listar usuários</button>";
 	echo "<div id='conteudo'></div> </div>";
 	
 	echo "<div id='tabs-2'>  <p>Amigos</p>  </div>";

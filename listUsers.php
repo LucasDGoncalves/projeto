@@ -8,7 +8,7 @@ $allUsers = $querys->getAllUsers();
 
 echo "<table id='usersList' width='60%'><thead><tr><th width='50%'>Nome</th><th width='50%'>Cidade</th></tr></thead><tbody>";
 foreach ($allUsers as $each){
-	echo "<tr><td><a href='{$each['login']}'>{$each['name']}</a></td><td>{$each['city']}</td></tr>";	
+	echo "<tr><td><span onclick='loadUser(\"{$each['login']}\")'>{$each['name']}</span></td><td>{$each['city']}</td></tr>";	
 } 
 echo "</tbody><tfoot><tr><td colspan='2'>";
 
