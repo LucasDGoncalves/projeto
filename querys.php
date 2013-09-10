@@ -165,7 +165,7 @@ class querys {
 		$userData['artistas'] = array();
 		
 		//traz amigos
-		$query_friend = "SELECT nome, cidade_natal, conhecido FROM conhecimento, pessoa where conhecedor like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}' AND pessoa.login=conhecimento.conhecido";
+		$query_friend = "SELECT nome, login, cidade_natal, conhecido FROM conhecimento, pessoa where conhecedor like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}' AND pessoa.login=conhecimento.conhecido";
 		$res = mysql_query ( $query_friend ) or die ( mysql_error () );
 		while ($rs = mysql_fetch_assoc($res)){
 			$userData['amigos'][] = $rs;

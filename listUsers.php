@@ -8,7 +8,8 @@ $allUsers = $querys->getAllUsers();
 
 echo "<table id='usersList' width='60%'><thead><tr><th width='50%'>Nome</th><th width='50%'>Cidade</th></tr></thead><tbody>";
 foreach ($allUsers as $each){
-	echo "<tr><td><span onclick='loadUser(\"{$each['login']}\")'>{$each['name']}</span></td><td>{$each['city']}</td></tr>";	
+	$cidade = utf8_encode($each['city']);
+	echo "<tr><td><span onclick='loadUser(\"{$each['login']}\")'>{$each['name']}</span></td><td>{$cidade}</td></tr>";	
 } 
 echo "</tbody><tfoot><tr><td colspan='2'>";
 

@@ -1,5 +1,7 @@
 $(document).ready(function(){
 	
+	var temp_friends_artists = '';
+	
   $(function() {
 	    $( "#tabs" ).tabs();
 	  });
@@ -23,7 +25,7 @@ $(document).ready(function(){
 	$('#conteudo').delegate('#submit_register', 'click', function() {
 		params = new Object();
 		params.name = $('#register_name').val();
-		params.login = $('#register_login').val();
+		params.login = 'http://www.ic.unicamp.br/MC536/2013/2/' + $('#register_login').val();
 		params.city = $('#register_city').val();
 		params.friends = $('#register_friends').val();
 		params.artists = $('#register_artists').val();
@@ -68,14 +70,17 @@ $(document).ready(function(){
 	};
 	
 	$('#conteudo-2').delegate('#button_cancel', 'click', function() {
+		//trocar botoes sendo mostrados
 		$('#button_cancel').hide();
 		$('#button_save').hide();
 		$('#button_edit').show();
 		
-		//habilitar campos de pessoa
+		//desabilitar edição dos campos de pessoa
 		$('#edit_name').prop('disabled', true);
 		$('#edit_city').prop('disabled', true);
-		$('#edit_login').prop('disabled', true);
+				
+		//desabilitar edição campo de amigos e campo de artistas
+		$( "#combos" ).html(temp_friends_artists);
 		
 	});
 	
@@ -88,7 +93,6 @@ $(document).ready(function(){
 		//habilitar campos de pessoa
 		$('#edit_name').prop('disabled', false);
 		$('#edit_city').prop('disabled', false);
-		$('#edit_login').prop('disabled', false);
 		
 		params = new Object();
 		params.login = $('#edit_login').val();
@@ -99,6 +103,7 @@ $(document).ready(function(){
 				url: "getEditForms.php",
 				data : params,
 			}).done(function( msg ) {
+				temp_friends_artists = $( "#combos" ).html(); 
 				$( "#combos" ).html(msg);
 				
 				$("select[multiple]").asmSelect({
