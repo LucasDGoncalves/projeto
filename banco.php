@@ -10,7 +10,7 @@ class banco {
 		$this->servidor = "localhost";
 		$this->usuario = "root";
 		$this->database = "mc536";
-		$this->password = "";
+		$this->password = "root";
 	}
 	
 	function conecta() {

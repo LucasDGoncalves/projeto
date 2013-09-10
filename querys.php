@@ -106,7 +106,27 @@ class querys {
 	function createUser($user_login, $user_name, $user_city) {
 		$this->con->conecta ();
 		
-		$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$user_login}', '{$user_name}', '{$user_city}')";
+		$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('http://www.ic.unicamp.br/MC536/2013/2/{$user_login}', '{$user_name}', '{$user_city}')";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		$this->con->fecha ();
+	}
+	
+	// Atualiza usuário na rede
+	function updateUser($user_login, $user_name, $user_city) {
+		$this->con->conecta ();
+		
+		$query = "UPDATE pessoa SET nome = '{$user_name}',  cidade_natal = '{$user_city}' where login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		$this->con->fecha ();
+	}
+	
+	// Remove usuário na rede
+	function delteUser($user_login, $user_name, $user_city) {
+		$this->con->conecta ();
+		
+		$query = "DELETE FROM pessoa where login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		$this->con->fecha ();
@@ -118,15 +138,26 @@ class querys {
 		$artist_id = $this->addArtist ( $artist_uri );
 		$this->con->conecta ();
 		
-		$query = "SELECT * from curtida where login = '{$user_login}' and id_artista = '{$artist_id}'";
+		$query = "SELECT * from curtida where login = 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}' and id_artista = '{$artist_id}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		if (mysql_num_rows ( $res ) == 0) {
-			$query = "INSERT into curtida (login, id_artista, nota) VALUES ('{$user_login}', '{$artist_uri}', '{$rating}')";
+			$query = "INSERT into curtida (login, id_artista, nota) VALUES ('http://www.ic.unicamp.br/MC536/2013/2/{$user_login}', '{$artist_uri}', '{$rating}')";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 		} else {
 			$res = false;
 		}
+		return $res;
+	}
+	
+	// Remove curtir
+	function deleteLike($user_login, $artist_uri) {
+		$artist_id = $this->addArtist ( $artist_uri );
+		$this->con->conecta ();
+		
+		$query = "DELETE from curtida where login = 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}' and id_artista = '{$artist_id}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
 		return $res;
 	}
 	
@@ -135,7 +166,18 @@ class querys {
 		// cria cconecta ao banco
 		$this->con->conecta ();
 		
-		$query = "INSERT into conhecimento (conhecedor, conhecido) VALUES ('{$user}', '{$friend}')";
+		$query = "INSERT into conhecimento (conhecedor, conhecido) VALUES ('http://www.ic.unicamp.br/MC536/2013/2/{$user}', 'http://www.ic.unicamp.br/MC536/2013/2/{$friend}')";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		$this->con->fecha ();
+	}
+	
+	// Remove amigo
+	function deleteFriend($user, $friend) {
+		// cria cconecta ao banco
+		$this->con->conecta ();
+		
+		$query = "DELETE from conhecimento where conhecedor like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}' conhecido like 'http://www.ic.unicamp.br/MC536/2013/2/{$friend}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		$this->con->fecha ();
@@ -150,35 +192,24 @@ class querys {
 		
 		$this->con->fecha ();
 		
-		return $res;
+		return mysql_fetch_assoc ( $res );
 	}
 	
-	// Retorna Usuário
+	// Retorna Usuário Completo
 	function getCompleteUser($user) {
-		$this->con->conecta ();
-	
-		//traz usuario
-		$query_base = "SELECT * FROM pessoa where login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}'";
-		$res = mysql_query ( $query_base ) or die ( mysql_error () );
-		$userData = mysql_fetch_assoc($res);
-		$userData['amigos'] = array();
-		$userData['artistas'] = array();
+		$querys = new querys();
 		
-		//traz amigos
-		$query_friend = "SELECT nome, login, cidade_natal, conhecido FROM conhecimento, pessoa where conhecedor like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}' AND pessoa.login=conhecimento.conhecido";
-		$res = mysql_query ( $query_friend ) or die ( mysql_error () );
-		while ($rs = mysql_fetch_assoc($res)){
-			$userData['amigos'][] = $rs;
-		}
-		//traz artistas favoritos
-		$query_artist = "SELECT nome_artistico, nota FROM artista, curtida WHERE login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}' AND id_artista=artista.id ";
-		$res = mysql_query ( $query_artist ) or die ( mysql_error () );
-		while ($rs = mysql_fetch_assoc($res)){
-			$userData['artistas'][] = $rs;
-		}
+		$userData = $querys->getUser ( $user );
+		$userData ['amigos'] = array ();
+		$userData ['artistas'] = array ();
 		
-		$this->con->fecha ();
-	
+		// traz amigos
+		$userData ['amigos'] [] = $querys->getKnownUsers ( $user );
+		
+		// traz artistas favoritos
+		$userData ['artistas'] [] = $querys->getFavoriteArtists ( $user );
+		
+		
 		return $userData;
 	}
 	
@@ -221,18 +252,36 @@ class querys {
 		return $allArtists;
 	}
 	
+	// Retorna os artistas favoritos do user
+	function getFavoriteArtists($user) {
+		$this->con->conecta ();
+		
+		$query = "SELECT nome_artistico, nota FROM artista, curtida WHERE login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}' AND id_artista=artista.id ";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		$favoriteArtists = array ();
+		$i = 0;
+		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+			$allArtists [$i] ['id'] = $rs ['id'];
+			$allArtists [$i ++] ['name'] = $rs ['nome_artistico'];
+		}
+		
+		$this->con->fecha ();
+		
+		return $allArtists;
+	}
+	
 	// Retorna todos os usuários da rede
 	function getAllUsers() {
 		$this->con->conecta ();
 		
 		$query = "SELECT * FROM pessoa";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		$allUsers = array();
-		$i=0;
-		while ($rs = mysql_fetch_assoc($res)){
-			$allUsers[$i]['login'] = $rs['login'];
-			$allUsers[$i]['city'] = $rs['cidade_natal'];
-			$allUsers[$i++]['name'] = $rs['nome'];
+		$allUsers = array ();
+		$i = 0;
+		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+			$allUsers [$i] ['login'] = $rs ['login'];
+			$allUsers [$i] ['city'] = $rs ['cidade_natal'];
+			$allUsers [$i ++] ['name'] = $rs ['nome'];
 		}
 		
 		$this->con->fecha ();
@@ -244,11 +293,11 @@ class querys {
 	function getUnKnownUsers($user_login) {
 		$this->con->conecta ();
 		
-		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
+		$query = "SELECT * FROM pessoa where login <> 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		$unknown = array();
-		while($rs = mysql_fetch_assoc($res)){
-			$unknown[] = $rs;
+		$unknown = array ();
+		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+			$unknown [] = $rs;
 		}
 		$this->con->fecha ();
 		
@@ -259,11 +308,11 @@ class querys {
 	function getKnownUsers($user_login) {
 		$this->con->conecta ();
 		
-		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
+		$query = "SELECT * FROM pessoa where login <> 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}' and login in (select conhecido from conhecimento where conhecedor = 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		$known = array();
-		while($rs = mysql_fetch_assoc($res)){
-			$known[] = $rs;
+		$known = array ();
+		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+			$known [] = $rs;
 		}
 		$this->con->fecha ();
 		

@@ -4,7 +4,7 @@ include_once "querys.php";
 
 $querys = new querys();
 
-$login = 'http://www.ic.unicamp.br/MC536/2013/2/'.$_POST['login'];
+$login = $_POST['login'];
 
 $unknownUsers = $querys->getUnKnownUsers($login);
 $knownUsers = $querys->getKnownUsers($login);

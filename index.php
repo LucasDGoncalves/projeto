@@ -18,8 +18,7 @@ $querys = new querys ();
 
 if (isset ( $_POST ['submit'] ) && $_POST ['submit'] == 'Login') {
 	// tentativa de logar, ver senha para decidir se dá acesso ou não
-	$res = $querys->getUser ( $_POST ['username'] );
-	$user = mysql_fetch_array ( $res );
+	$user = $querys->getUser ( $_POST ['username'] );
 	
 	if (strpos ( $user ['nome'], $_POST ['password'] ) !== false) {
 		$_SESSION ['logado'] = true;
