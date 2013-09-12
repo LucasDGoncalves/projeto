@@ -43,6 +43,28 @@ $(document).ready(
 						});
 					});
 
+			$('#conteudo-2').delegate(
+					'#button_save_edit',
+					'click',
+					function() {
+						params = new Object();
+						params.name = $('#register_name').val();
+						params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'
+								+ $('#register_login').val();
+						params.city = $('#register_city').val();
+						params.friends = $('#register_friends').val();
+						params.artists = $('#register_artists').val();
+
+						$.ajax({
+							type : 'POST',
+							url : "submitEditForm.php",
+							data : params,
+						}).done(function(msg) {
+							$("#conteudo").html(msg);
+
+						});
+					});
+			
 			$('#button_list').click(function() {
 
 				$.ajax({
@@ -78,7 +100,7 @@ $(document).ready(
 			$('#conteudo-2').delegate('#button_cancel', 'click', function() {
 				// trocar botoes sendo mostrados
 				$('#button_cancel').hide();
-				$('#button_save').hide();
+				$('#button_save_edit').hide();
 				$('#button_edit').show();
 
 				// desabilitar edição dos campos de pessoa
@@ -94,7 +116,7 @@ $(document).ready(
 				// transformar botao editar em salvar e cancelar
 				$('#button_edit').hide();
 				$('#button_cancel').show();
-				$('#button_save').show();
+				$('#button_save_edit').show();
 
 				// habilitar campos de pessoa
 				$('#edit_name').prop('disabled', false);

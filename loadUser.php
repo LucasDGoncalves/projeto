@@ -3,7 +3,7 @@ include_once "querys.php";
 
 $querys = new querys ();
 
-$login = $_POST ['login'];
+$login = substr($_POST['login'], strlen('http://www.ic.unicamp.br/MC536/2013/2/'));
 $userInfo = $querys->getCompleteUser ( $login );
 
 $fieldFriends = "<table><tr><th>Nome</th><th>Cidade</th></tr>";
@@ -29,6 +29,6 @@ echo "<div style='margin-left:150; float:left'>Artistas : {$fieldArtists}</br></
 echo "<div id='div-edit-buttons' style='float:left'>
 		<button id='button_edit'>Editar</button>
 		<button id='button_cancel' hidden>Cancelar</button>
-		<button id='button_save' hidden>Salvar</button>
+		<button id='button_save_edit' hidden>Salvar</button>
 		</div>";
 ?>
