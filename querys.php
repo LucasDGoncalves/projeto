@@ -115,7 +115,7 @@ class querys {
 	// Atualiza usuário na rede
 	function updateUser($user_login, $user_name, $user_city) {
 		$this->con->conecta ();
-		
+	
 		$query = "UPDATE pessoa SET nome = '{$user_name}',  cidade_natal = '{$user_city}' where login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		

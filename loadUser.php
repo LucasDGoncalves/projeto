@@ -4,7 +4,8 @@ include_once "querys.php";
 $querys = new querys ();
 
 $login = $_POST ['login'];
-$userInfo = $querys->getCompleteUser ( $login );
+$n = strlen("http://www.ic.unicamp.br/MC536/2013/2/");
+$userInfo = $querys->getCompleteUser ( substr($login , $n));
 
 $fieldFriends = "<table><tr><th>Nome</th><th>Cidade</th></tr>";
 foreach ( $userInfo ['amigos'] as $each ) {
