@@ -105,12 +105,24 @@ class querys {
 	// TODO: Tratar login repetido
 	function createUser($user_login, $user_name, $user_city) {
 		$this->con->conecta ();
+		$sucesso = false;
+		$query = "SELECT * from pessoa where login like '{$user_login}'";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			if (mysql_num_rows ( $res ) == 0) {
+				$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$user_login}', '{$user_name}', '{$user_city}')";
 		
-		$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$user_login}', '{$user_name}', '{$user_city}')";
-		
-		$res = mysql_query ( $query ) or die ( mysql_error () );
-		
+				$res = mysql_query ( $query ) or die ( mysql_error () );
+				
+				$sucesso = true;
+			}
+			else{
+				$sucesso = false;
+			}
+			
 		$this->con->fecha ();
+		
+		return $sucesso;
 	}
 	
 	// Atualiza usuário na rede

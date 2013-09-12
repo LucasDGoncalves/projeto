@@ -14,7 +14,7 @@ $fieldFriends .= "</select>";
 $allArtists = $querys->getAllArtists();
 $fieldArtists = "<select multiple='multiple' id='register_artists' title='Selecione seus artistas favoritos'>";
 foreach ($allArtists as $each){
-	$fieldArtists.= "<option value='{$each["id"]}'> {$each["name"]} </option>";
+	$fieldArtists.= "<option value='{$each["name"]}'> {$each["name"]} </option>";
 }
 $fieldArtists .= "</select>";
 

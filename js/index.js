@@ -38,7 +38,7 @@ $(document).ready(
 							url : "submitRegisterForm.php",
 							data : params,
 						}).done(function(msg) {
-							$("#conteudo").html(msg);
+							alert(msg);
 
 						});
 					});
@@ -128,14 +128,22 @@ $(document).ready(
 					url : "newArtistLike.php",
 					data : params
 				}).done(function(msg) {
-					alert(msg);
-					var string_line = '<tr><td>'+params.artist+'</td><td><select name="'+$("#new_artist_name").val()+' onchange="rateArtist(this, \''+$("#edit_login").val()+'\')">';
+					row = Math.floor((Math.random()*1000)+1);
+					var string_line = '<tr id=row_'+row+'><td>'+params.artist+'</td><td><select name="'+$("#new_artist_name").val()+'" onchange="rateArtist(this, \''+$("#edit_login").val()+'\')">';
 						for (var j=1;j<=5;j++){
-							string_line += '<option value="'+j+'" '+ j==$("#new_artist_rating").val()?'selected="selected"':'' +'>'+j+'</option>';
+							string_line += '<option value="'+j+'" ';
+							if (j == $("#new_artist_rating").val()){
+								string_line += 'selected="selected"'; 
+							}
+							string_line += '>'+j+'</option>';
 						}
-					string_line += '</td><td></td><td></td></tr>';
+					string_line += '</td>';
+					string_line += '<td><span id=\'remove_'+$("#new_artist_name").val()+'\' onclick="removeLike(this, \''+$("#edit_login").val()+'\', '+row+')">X</span></td></tr>';	
 					$("#artists-liked tr:last").after(string_line);
 					//resetar linha de adicao
+					$("#new_artist").html('http://en.wikipedia.org/wiki/<input type=\'text\' id=\'new_artist_name\' size=\'15\' placeholder=\'uri do artista\'/>' 
+							+ '<select id=\'new_artist_rating\' title=\'Nota\'><option value=1>1</option><option value=2>2</option><option value=3>3</option>'
+							+ '<option value=4>4</option><option value=5>5</option></select><button id=\'add_artist_like\'>Add</button>');
 				});
 
 			});
@@ -150,7 +158,7 @@ $(document).ready(
 					url : "rateArtist.php",
 					data : params
 				}).done(function(msg) {
-					$("#notice_"+e.name).html(msg);
+					alert(msg);
 				});
 			};
 			

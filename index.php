@@ -2,7 +2,7 @@
 include_once "banco.php";
 include_once "querys.php";
 
-echo "<meta charset='utf-8' />";
+echo "<meta http-equiv='content-type' content='text/html;charset=utf-8' />";
 echo "<title>Social Book</title>";
 echo "<link rel='stylesheet' href='css/jquery-ui.css' />";
 echo "<script type='text/javascript' src='js/jquery-2.0.3.js'></script>";

@@ -13,7 +13,7 @@ foreach ( $userInfo ['amigos'] as $each ) {
 }
 $fieldFriends .= "</table>";
 
-$fieldArtists = "<table id='artists-liked'><tr><th>Nome Art.</th><th>Nota</th><th colspan='2'></th></tr>";
+$fieldArtists = "<table id='artists-liked'><tr><th>Nome Art.</th><th>Nota</th><th></th></tr>";
 $row=0;
 foreach ( $userInfo ['artistas'] as $each ) {
 	$artName = substr($each["nome_artistico"], strlen('http://en.wikipedia.org/wiki/'));
@@ -26,9 +26,8 @@ foreach ( $userInfo ['artistas'] as $each ) {
 		}
 		$fieldArtists .= ">{$i}</option>";
 	}
-	$fieldArtists .="</select>
-			<td><span id='remove_{$artName}' onclick=\"removeLike(this, '{$login}', {$row})\">X</span></td>
-			<td><span id='notice_{$artName}'>&nbsp;</span></td></td>";
+	$fieldArtists .="</select></td>
+			<td><span id='remove_{$artName}' onclick=\"removeLike(this, '{$login}', {$row})\">X</span></td>";
 	$row++;
 }
 $fieldArtists .= "</table>";
