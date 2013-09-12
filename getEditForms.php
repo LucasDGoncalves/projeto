@@ -18,14 +18,15 @@ foreach ($unknownUsers as $each){
 }
 $fieldFriends .= "</select>";
 
-$allArtists = $querys->getAllArtists();
-$fieldArtists = "<select multiple='multiple' id='register_artists' title='Selecione seus artistas favoritos'>";
-foreach ($allArtists as $each){
-	$fieldArtists.= "<option value='{$each["id"]}'> {$each["name"]} </option>";
-}
-$fieldArtists .= "</select>";
+// $allArtists = $querys->getAllArtists();
+// $fieldArtists = "<select multiple='multiple' id='register_artists' title='Selecione seus artistas favoritos'>";
+// foreach ($allArtists as $each){
+// 	$fieldArtists.= "<option value='{$each["id"]}'> {$each["name"]} </option>";
+// }
+// $fieldArtists .= "</select>";
 
-echo "<div style='float:left; width:40%'>Amigos : {$fieldFriends}</div>";
-echo "<div style='margin-left:50; float:left; width:40%''>Artistas : {$fieldArtists}</div></br>";
+// echo "<div style='float:left; width:40%'>Amigos : {$fieldFriends}</div>";
+echo "Amigos : {$fieldFriends}";
+// echo "<div style='margin-left:50; float:left; width:40%''>Artistas : {$fieldArtists}</div></br>";
 
 ?>

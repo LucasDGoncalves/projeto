@@ -156,9 +156,20 @@ class querys {
 		$artist_id = $this->addArtist ( $artist_uri );
 		$this->con->conecta ();
 		
-		$query = "DELETE from curtida where login = 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}' and id_artista = '{$artist_id}'";
+		$query = "DELETE from curtida where login = '{$user_login}' and id_artista = '{$artist_id}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
+		return $res;
+	}
+	
+	// Atualiza curtir
+	function updateLike($user_login, $artist_uri, $rating) {
+		$artist_id = $this->addArtist ( $artist_uri );
+		$this->con->conecta ();
+	
+		$query = "UPDATE curtida set nota={$rating} WHERE login ='{$user_login}' and id_artista = '{$artist_id}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+	
 		return $res;
 	}
 	

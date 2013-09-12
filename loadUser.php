@@ -13,22 +13,39 @@ foreach ( $userInfo ['amigos'] as $each ) {
 }
 $fieldFriends .= "</table>";
 
-$fieldArtists = "<table><tr><th>Nome Art.</th><th>Nota</th></tr>";
+$fieldArtists = "<table><tr><th>Nome Art.</th><th>Nota</th><th colspan='2'></th></tr>";
+$row=0;
 foreach ( $userInfo ['artistas'] as $each ) {
-	$fieldArtists .= "<tr><td>{$each["nome_artistico"]}</td><td>{$each["nota"]}</td>";
+	$artName = substr($each["nome_artistico"], strlen('http://en.wikipedia.org/wiki/'));
+	$fieldArtists .= "<tr id='row_{$row}'><td>{$each["nome_artistico"]}</td><td>
+	<select name='{$artName}' onchange=\"rateArtist(this, '{$login}')\">";
+	for ($i=1;$i<=5;$i++){
+		$fieldArtists .= "<option value='{$i}' ";
+		if ($i==$each["nota"]){
+			$fieldArtists .= "selected='selected'";
+		}
+		$fieldArtists .= ">{$i}</option>";
+	}
+	$fieldArtists .="</select>
+			<td><span id='remove_{$artName}' onclick=\"removeLike(this, '{$login}', {$row})\">X</span></td>
+			<td><span id='notice_{$artName}'>&nbsp;</span></td></td>";
+	$row++;
 }
 $fieldArtists .= "</table>";
 
+// echo"<div id='conteudo-2'>";
 echo "Nome: <input type='text' size='50' id='edit_name' name='register_name' disabled='disabled' value='{$userInfo['nome']}'></br>";
 echo "Username: http://www.ic.unicamp.br/MC536/2013/2/ <input type='text' id='edit_login' name='register_login' disabled='disabled' value='{$login}'></br>";
 $cidade_natal = utf8_encode ( $userInfo ['cidade_natal'] );
-echo "Cidade Natal: <input type='text'  id='edit_city' name='register_city' disabled='disabled' value='{$cidade_natal}'></br>";
-echo "<div id='combos'><div style='float:left'>Amigos : {$fieldFriends}</div>";
-echo "<div style='margin-left:150; float:left'>Artistas : {$fieldArtists}</br></div></div></br>";
-
-echo "<div id='div-edit-buttons' style='float:left'>
+echo "Cidade Natal: <input type='text' id='edit_city' name='register_city' disabled='disabled' value='{$cidade_natal}'></br>";
+echo "<div id='combos'><div id='div-amigos' style='float:left; margin-top:50'>Amigos : {$fieldFriends}</div><br>";
+echo "<div id='div-edit-buttons' style='float:right'>
 		<button id='button_edit'>Editar</button>
 		<button id='button_cancel' hidden>Cancelar</button>
 		<button id='button_save_edit' hidden>Salvar</button>
-		</div>";
+		</div></div>";
+// echo "</div><div id='conteudo-3'>";
+echo "||separator||<div style='margin-left:150; float:right>Artistas : {$fieldArtists}</br></div>";
+
+
 ?>

@@ -36,16 +36,23 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 	echo "<ul>
 	<li><a id='tab1_button' href='#tabs-1'>Home</a></li>
 	<li><a id='tab2_button' href='#tabs-2'>Usuário</a></li>
-	<li><a id='tab3_button' href='#tabs-3'>Artistas</a></li>
 	</ul>";
 	
-	echo "<div id='tabs-1'>";
+	echo "<div id='tabs-1' style='height:80%'>";
 	echo "<button id='display_register'>Cadastrar Usuário</button>";
   echo "<button id='button_list'>Listar usuários</button>";
 	echo "<div id='conteudo'></div> </div>";
 	
-	echo "<div id='tabs-2'>  <div id='conteudo-2'></div>  </div>";
-	echo "<div id='tabs-3'>  <p>Artistas</p>  </div>";
+	echo "<div id='tabs-2' style='height:80%'>"; 
+// 			<div id='header-2'>
+// 				<ul>
+// 					<li><a id='profile1_button' href='#conteudo-2'>Perfil</a></li>
+// 					<li><a id='profile2_button' href='#conteudo-3'>Curtidas</a></li>
+// 				</ul>
+// 			</div>
+	echo	"<div id='conteudo-2' style='float:left; widht:50%'> Busque um usuário para seu perfil aparecer nesta aba</div>
+			<div id='conteudo-3' style='float:right; margin-right:100'></div>
+		</div>";
 	echo "</div>";
 } else {
 	// mostrar tela de login

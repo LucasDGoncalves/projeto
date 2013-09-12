@@ -61,7 +61,6 @@ $(document).ready(
 							data : params,
 						}).done(function(msg) {
 							$("#conteudo-2").html(msg);
-
 						});
 					});
 			
@@ -83,6 +82,8 @@ $(document).ready(
 			});
 
 			loadUser = function(login) {
+				$("#conteudo-2").hide();
+				$("#conteudo-3").hide();
 				$("#tab2_button").trigger('click');
 				params = new Object();
 				params.login = login;
@@ -91,8 +92,13 @@ $(document).ready(
 					url : "loadUser.php",
 					data : params
 				}).done(function(msg) {
-					$("#conteudo-2").html(msg);
-
+					conteudo2 = msg.substring(0, msg.indexOf('||separator||'));
+					conteudo3 = msg.substring(msg.indexOf('||separator||')+13);
+					
+					$("#conteudo-2").html(conteudo2);
+					$("#conteudo-3").html(conteudo3);
+					$("#conteudo-2").show();
+					$("#conteudo-3").show();
 				});
 
 			};
@@ -108,12 +114,47 @@ $(document).ready(
 				$('#edit_city').prop('disabled', true);
 
 				// desabilitar edição campo de amigos e campo de artistas
-				$("#combos").html(temp_friends_artists);
+				$("#div-amigos").html(temp_friends_artists);
 
 			});
+			
+			$("#file").on( "change", '.selector_of_element_to_watch', function() {
+			      // Run if a descendant of '#file' that matches the selector
+			      //    '.selector_of_element_to_watch' triggered the event
+			    $("#submit_form").trigger('click');
+			});
+			
+			rateArtist = function(e, login) {
+				params = new Object();
+				params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'+login;
+				params.artist = 'http://en.wikipedia.org/wiki/'+e.name;
+				params.nota = e.value;
+				$.ajax({
+					type : 'POST',
+					url : "rateArtist.php",
+					data : params
+				}).done(function(msg) {
+					$("#notice_"+e.name).html(msg);
+				});
+			};
+			
+			removeLike = function(e, login, row) {
+				params = new Object();
+				params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'+login;
+				params.artist = 'http://en.wikipedia.org/wiki/'+e.id.substring(7);
+				$.ajax({
+					type : 'POST',
+					url : "removeLike.php",
+					data : params
+				}).done(function(msg) {
+					$("#row_"+row).hide();
+				});
+			};
+
 
 			$('#conteudo-2').delegate('#button_edit', 'click', function() {
 				// transformar botao editar em salvar e cancelar
+				$("#div-amigos").hide();
 				$('#button_edit').hide();
 				$('#button_cancel').show();
 				$('#button_save_edit').show();
@@ -131,15 +172,15 @@ $(document).ready(
 					url : "getEditForms.php",
 					data : params,
 				}).done(function(msg) {
-					temp_friends_artists = $("#combos").html();
-					$("#combos").html(msg);
+					temp_friends_artists = $("#div-amigos").html();
+					$("#div-amigos").html(msg);
 
 					$("select[multiple]").asmSelect({
 						addItemTarget : 'bottom',
 						sortable : true,
-						removeLabel : 'remover X'
+						removeLabel : 'X'
 					});
-
+					$("#div-amigos").show();
 				});
 			});
 		});
