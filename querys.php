@@ -143,7 +143,8 @@ class querys {
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		if (mysql_num_rows ( $res ) == 0) {
-			$query = "INSERT into curtida (login, id_artista, nota) VALUES ('{$user_login}', '{$artist_uri}', '{$rating}')";
+			$query = "INSERT into curtida (login, id_artista, nota) VALUES ('{$user_login}', '{$artist_id}', '{$rating}')";
+			
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 		} else {
 			$res = false;

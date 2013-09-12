@@ -38,12 +38,12 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 	<li><a id='tab2_button' href='#tabs-2'>Usuário</a></li>
 	</ul>";
 	
-	echo "<div id='tabs-1' style='height:80%'>";
+	echo "<div id='tabs-1' style='height:88%'>";
 	echo "<button id='display_register'>Cadastrar Usuário</button>";
   echo "<button id='button_list'>Listar usuários</button>";
 	echo "<div id='conteudo'></div> </div>";
 	
-	echo "<div id='tabs-2' style='height:80%'>"; 
+	echo "<div id='tabs-2' style='height:88%'>"; 
 // 			<div id='header-2'>
 // 				<ul>
 // 					<li><a id='profile1_button' href='#conteudo-2'>Perfil</a></li>

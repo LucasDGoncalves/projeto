@@ -118,10 +118,26 @@ $(document).ready(
 
 			});
 			
-			$("#file").on( "change", '.selector_of_element_to_watch', function() {
-			      // Run if a descendant of '#file' that matches the selector
-			      //    '.selector_of_element_to_watch' triggered the event
-			    $("#submit_form").trigger('click');
+			$('#conteudo-3').delegate('#add_artist_like', 'click', function() {
+				params = new Object();
+				params.artist= 'http://en.wikipedia.org/wiki/'+$("#new_artist_name").val();
+				params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'+$("#edit_login").val();
+				params.rating = $("#new_artist_rating").val();
+				$.ajax({
+					type : 'POST',
+					url : "newArtistLike.php",
+					data : params
+				}).done(function(msg) {
+					alert(msg);
+					var string_line = '<tr><td>'+params.artist+'</td><td><select name="'+$("#new_artist_name").val()+' onchange="rateArtist(this, \''+$("#edit_login").val()+'\')">';
+						for (var j=1;j<=5;j++){
+							string_line += '<option value="'+j+'" '+ j==$("#new_artist_rating").val()?'selected="selected"':'' +'>'+j+'</option>';
+						}
+					string_line += '</td><td></td><td></td></tr>';
+					$("#artists-liked tr:last").after(string_line);
+					//resetar linha de adicao
+				});
+
 			});
 			
 			rateArtist = function(e, login) {
