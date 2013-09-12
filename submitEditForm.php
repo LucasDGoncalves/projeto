@@ -4,21 +4,18 @@ include_once "querys.php";
 
 $querys = new querys();
 
-var_dump($_POST);
-
 $querys->updateUser($_POST['login'], $_POST['name'], $_POST['city']);
 
+$login = substr($_POST['login'], strlen('http://www.ic.unicamp.br/MC536/2013/2/'));
 $userInfo = $querys->getCompleteUser ( $login );
-$userInfo['amigos'];
-$userInfo['artistas'];
 
 $friends_to_add = array();
 
-foreach ($_POST['friends'] as $newfriend){// apenas uma string com o login
+foreach ($_POST['friends'] as $newFriend){// apenas uma string com o login
 	$found = false;
-	foreach ($userInfo['amigos'] as $oldFriend){//array associativo com todas inormações
+	foreach ($userInfo['amigos'] as &$oldFriend){//array associativo com todas inormações
 		if ($newFriend == $oldFriend['login']){
-			unset($oldFriend);
+			$oldFriend['found'] = 1;
 			$found = true;
 			break;
 		}
@@ -26,16 +23,17 @@ foreach ($_POST['friends'] as $newfriend){// apenas uma string com o login
 	if (!$found){
 		$friends_to_add[] = $newFriend;
 	}
+	else{
+	}
 }
 
 foreach ($friends_to_add as $newFriend){
 	$querys->addFriend($_POST['login'], $newFriend);
 }
 foreach ($userInfo['amigos'] as $removedFriend){
-	$querys->deleteFriend($_POST['login'], $newFriend);
+	if (!isset($removedFriend['found']))
+	$querys->deleteFriend($_POST['login'], $removedFriend['login']);
 }
-
-echo 'updated';
 
 
 // $querys->addFriend($_POST['login'], each$friend);

@@ -178,7 +178,7 @@ class querys {
 		// cria cconecta ao banco
 		$this->con->conecta ();
 		
-		$query = "DELETE from conhecimento where conhecedor like '{$user}' conhecido like '{$friend}'";
+		$query = "DELETE from conhecimento where conhecedor like '{$user}' AND conhecido like '{$friend}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		$this->con->fecha ();

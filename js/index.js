@@ -48,10 +48,10 @@ $(document).ready(
 					'click',
 					function() {
 						params = new Object();
-						params.name = $('#register_name').val();
+						params.name = $('#edit_name').val();
 						params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'
-								+ $('#register_login').val();
-						params.city = $('#register_city').val();
+								+ $('#edit_login').val();
+						params.city = $('#edit_city').val();
 						params.friends = $('#register_friends').val();
 						params.artists = $('#register_artists').val();
 
@@ -60,7 +60,7 @@ $(document).ready(
 							url : "submitEditForm.php",
 							data : params,
 						}).done(function(msg) {
-							$("#conteudo").html(msg);
+							$("#conteudo-2").html(msg);
 
 						});
 					});

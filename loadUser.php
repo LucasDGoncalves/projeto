@@ -19,10 +19,10 @@ foreach ( $userInfo ['artistas'] as $each ) {
 }
 $fieldArtists .= "</table>";
 
-echo "Nome: <input type='text' size='50' id='edit_name' name='name' disabled='disabled' value='{$userInfo['nome']}'></br>";
-echo "Username: http://www.ic.unicamp.br/MC536/2013/2/ <input type='text' id='edit_login' name='username' disabled='disabled' value='{$login}'></br>";
+echo "Nome: <input type='text' size='50' id='edit_name' name='register_name' disabled='disabled' value='{$userInfo['nome']}'></br>";
+echo "Username: http://www.ic.unicamp.br/MC536/2013/2/ <input type='text' id='edit_login' name='register_login' disabled='disabled' value='{$login}'></br>";
 $cidade_natal = utf8_encode ( $userInfo ['cidade_natal'] );
-echo "Cidade Natal: <input type='text'  id='edit_city' name='city' disabled='disabled' value='{$cidade_natal}'></br>";
+echo "Cidade Natal: <input type='text'  id='edit_city' name='register_city' disabled='disabled' value='{$cidade_natal}'></br>";
 echo "<div id='combos'><div style='float:left'>Amigos : {$fieldFriends}</div>";
 echo "<div style='margin-left:150; float:left'>Artistas : {$fieldArtists}</br></div></div></br>";
 
