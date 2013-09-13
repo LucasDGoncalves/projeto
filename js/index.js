@@ -38,8 +38,7 @@ $(document).ready(
 							url : "submitRegisterForm.php",
 							data : params,
 						}).done(function(msg) {
-							alert(msg);
-
+							loadUser(params.login);
 						});
 					});
 
