@@ -6,7 +6,7 @@ $(document).ready(
 				$("#tabs").tabs();
 			});
 
-			$('#display_register').click(function() {
+			displayRegister = function() {
 
 				$.ajax({
 					url : "registerForm.php",
@@ -19,7 +19,13 @@ $(document).ready(
 					});
 
 				});
-			});
+			};
+			
+			$('#display_register').click(function(){
+				displayRegister();
+				});
+			
+	
 
 			$('#conteudo').delegate(
 					'#submit_register',
@@ -41,6 +47,7 @@ $(document).ready(
 							alert(msg);
 							if(msg == 'Usuário cadastrado com sucesso' || msg == 'Este login já esta cadastrado no banco' ){
 							loadUser(params.login);
+							displayRegister();
 							}
 						});
 					});
@@ -142,7 +149,7 @@ $(document).ready(
 					string_line += '</td>';
 					string_line += '<td><span id=\'remove_'+$("#new_artist_name").val()+'\' onclick="removeLike(this, \''+$("#edit_login").val()+'\', '+row+')">X</span></td></tr>';	
 					$("#artists-liked tr:last").after(string_line);
-					//resetar linha de adicao
+					// resetar linha de adicao
 					$("#new_artist").html('http://en.wikipedia.org/wiki/<input type=\'text\' id=\'new_artist_name\' size=\'15\' placeholder=\'uri do artista\'/>' 
 							+ '<select id=\'new_artist_rating\' title=\'Nota\'><option value=1>1</option><option value=2>2</option><option value=3>3</option>'
 							+ '<option value=4>4</option><option value=5>5</option></select><button id=\'add_artist_like\'>Add</button>');
