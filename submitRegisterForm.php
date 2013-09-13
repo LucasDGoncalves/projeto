@@ -1,24 +1,28 @@
 <?php
-
 include_once "querys.php";
 
-$querys = new querys();
+$querys = new querys ();
 
-$sucesso = $querys->createUser($_POST['login'], $_POST['name'], $_POST['city']);
+$sucesso = $querys->createUser ( $_POST ['login'], $_POST ['name'], $_POST ['city'] );
 
-if ($sucesso){
-foreach ($_POST['friends'] as $friend_login){
-	$querys->addFriend($_POST['login'], $friend_login);
+$msg = "Este login já esta cadastrado no banco";
+if (strlen ( trim ( $_POST ['name'] ) ) == 0) {
+	$msg = "Nome não pode ser vazio";
+	$sucesso = false;
+}
+if (strlen ( trim ( $_POST ['login'] ) ) == 0) {
+	$msg = "Login não pode ser vazio";
+	$sucesso = false;
 }
 
-foreach ($_POST['artists'] as $artist_name){
-	$querys->addLike($_POST['login'], $artist_name, 5);
-}
-
-echo "Usuário cadastrado com sucesso";
-}
-else{
-	echo "Este login já esta cadastrado no banco";
+if ($sucesso) {
+	foreach ( $_POST ['friends'] as $friend_login ) {
+		$querys->addFriend ( $_POST ['login'], $friend_login );
+	}
+	
+	echo "Usuário cadastrado com sucesso";
+} else {
+	echo $msg;
 }
 
 ?>

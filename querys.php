@@ -102,7 +102,6 @@ class querys {
 	}
 	
 	// Cria novo usuário na rede
-	// TODO: Tratar login repetido
 	function createUser($user_login, $user_name, $user_city) {
 		$this->con->conecta ();
 		$sucesso = false;

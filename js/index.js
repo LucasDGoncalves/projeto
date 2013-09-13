@@ -38,7 +38,10 @@ $(document).ready(
 							url : "submitRegisterForm.php",
 							data : params,
 						}).done(function(msg) {
+							alert(msg);
+							if(msg == 'Usuário cadastrado com sucesso' || msg == 'Este login já esta cadastrado no banco' ){
 							loadUser(params.login);
+							}
 						});
 					});
 
