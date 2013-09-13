@@ -1,16 +1,15 @@
-<?php 
-
+<?php
 include_once "querys.php";
 
-$querys = new querys();
+$querys = new querys ();
 
-$allUsers = $querys->getAllUsers();
+$allUsers = $querys->getAllUsers ();
 
-echo "<table id='usersList' width='60%'><thead><tr><th width='50%'>Nome</th><th width='50%'>Cidade</th></tr></thead><tbody>";
-foreach ($allUsers as $each){
-	$cidade = utf8_encode($each['city']);
-	echo "<tr><td><span onclick='loadUser(\"{$each['login']}\")'>{$each['name']}</span></td><td>{$cidade}</td></tr>";	
-} 
+echo "<table id='usersList' width='60%'><thead><tr><th id='sort' width='50%'>Nome</th><th id='sort' width='50%'>Cidade</th></tr></thead><tbody>";
+foreach ( $allUsers as $each ) {
+	$cidade = utf8_encode ( $each ['city'] );
+	echo "<tr><td><span id='user' onclick='loadUser(\"{$each['login']}\")'>{$each['name']}</span></td><td>{$cidade}</td></tr>";
+}
 echo "</tbody><tfoot><tr><td colspan='2'>";
 
 echo "<div id='pager' class='pager'>

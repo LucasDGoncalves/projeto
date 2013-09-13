@@ -1,0 +1,12 @@
+span#user {
+	cursor: pointer;
+}
+
+div.ui-corner-bottom {
+	height: auto !important;
+	overflow: auto;
+}
+
+th#sort {
+	cursor: pointer;
+}
