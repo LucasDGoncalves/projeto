@@ -40,7 +40,7 @@ class DataMining {
 			$raw_result = $raw_result ['result'];
 			
 			$result ['name'] = $raw_result [0] ['name'];
-			$result ['notable'] = $raw_result [0] ['notable']['name'];
+			$result ['notable'] = $raw_result [0] ['notable'] ['name'];
 			$i = 0;
 			foreach ( $raw_result [0] ['output'] ['/location/location/containedby'] ['/location/location/containedby'] as $genre ) {
 				$result ['containdby'] [$i] = $genre ['name'];
@@ -59,15 +59,21 @@ class DataMining {
 			
 			$raw_result = json_decode ( file_get_contents ( $url ), true );
 			$raw_result = $raw_result ['corrections'];
-			
-			$result = $raw_result ['correction'] ['artist'] ['name'];
+			if (strlen ( $raw_reult ) == 0) {
+				$result = false;
+			} else {
+				$result = $raw_result ['correction'] ['artist'] ['name'];
+			}
 		}
 		
 		return $result;
 	}
 	function searchLastFMArtist($artist, $data = json) {
 		if (! empty ( $artist )) {
-			$artist = $this->searchLastFMCorrection ( $artist );
+			$result = $this->searchLastFMCorrection ( $artist );
+			if (! empty ( $result )) {
+				$artist = $result;
+			}
 			$url = 'http://ws.audioscrobbler.com/2.0/?' . $query;
 			$url .= 'method=' . urlencode ( 'artist.getinfo' );
 			$url .= '&artist=' . urlencode ( $artist );
@@ -79,6 +85,7 @@ class DataMining {
 			
 			$result ['name'] = $raw_result ['name'];
 			$result ['similar'] = $raw_result ['similar'];
+			$result ['placeformed'] = $raw_result ['bio'] ['placeformed'];
 		}
 		
 		return $result;
@@ -88,8 +95,8 @@ class DataMining {
 // Teste
 $fb = new DataMining ();
 
-$result = $fb->searchLastFMArtist ( 'Hypnos69' );
+$result = $fb->searchLastFMArtist ( 'Zeca Baleiro' );
 $result = $fb->searchFreeBaseGenre ( 'Metallica' );
-$result = $fb->searchFreeBaseLocation( 'Brasil' );
+$result = $fb->searchFreeBaseLocation ( 'Brasil' );
 
 ?>
