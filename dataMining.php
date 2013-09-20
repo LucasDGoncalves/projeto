@@ -2,13 +2,12 @@
 class DataMining {
 	private $api_key_freebase = 'AIzaSyCwnpSWj7Hz5VFIE47L13acKmkNvNowGiI';
 	private $api_key_lastFM = '3f727d7f46b7c9c9d956bed64112b212';
-	
 	public function searchFreeBaseGenre($query, $filter = '', $output = '', $start = 0, $limit = 10, $exact = 'true') {
 		if (! empty ( $query )) {
 			$query = urlencode ( $query );
 			$url = 'https://www.googleapis.com/freebase/v1/search?query=' . $query;
-			$url .= '&filter=(' . urlencode ( $filter ) . ')';
-			$url .= '&output=(' . urlencode ( $output ) . ')';
+			$url .= '&filter=(' . urlencode ( 'any type:/music/artist' ) . ')';
+			$url .= '&output=(' . urlencode ( '/music/artist/genre' ) . ')';
 			$url .= '&start=' . $start;
 			$url .= '&limit=' . $limit;
 			$url .= '&exact=' . $exact;
@@ -23,7 +22,30 @@ class DataMining {
 				$result ['genre'] [$i] = $genre ['name'];
 				$i ++;
 			}
+			return $result;
+		}
+	}
+	public function searchFreeBaseLocation($query, $filter = '', $output = '', $start = 0, $limit = 10, $exact = 'false') {
+		if (! empty ( $query )) {
+			$query = urlencode ( $query );
+			$url = 'https://www.googleapis.com/freebase/v1/search?query=' . $query;
+			$url .= '&filter=(' . urlencode ( 'any type:\'/location\'' ) . ')';
+			$url .= '&output=(' . urlencode ( '/location/location/containedby' ) . ')';
+			$url .= '&start=' . $start;
+			$url .= '&limit=' . $limit;
+			$url .= '&exact=' . $exact;
+			$url .= '&key=' . $this->api_key_freebase;
 			
+			$raw_result = json_decode ( file_get_contents ( $url ), true );
+			$raw_result = $raw_result ['result'];
+			
+			$result ['name'] = $raw_result [0] ['name'];
+			$result ['notable'] = $raw_result [0] ['notable']['name'];
+			$i = 0;
+			foreach ( $raw_result [0] ['output'] ['/location/location/containedby'] ['/location/location/containedby'] as $genre ) {
+				$result ['containdby'] [$i] = $genre ['name'];
+				$i ++;
+			}
 			return $result;
 		}
 	}
@@ -65,7 +87,9 @@ class DataMining {
 
 // Teste
 $fb = new DataMining ();
-$result = $fb->searchLastFMArtist ( 'Hypnos69' );
 
-$result = $fb->searchFreeBaseGenre ( 'Metallica', 'any type:/music/artist', '/music/artist/genre' );
+$result = $fb->searchLastFMArtist ( 'Hypnos69' );
+$result = $fb->searchFreeBaseGenre ( 'Metallica' );
+$result = $fb->searchFreeBaseLocation( 'Brasil' );
+
 ?>
