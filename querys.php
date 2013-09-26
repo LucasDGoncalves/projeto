@@ -1,5 +1,6 @@
 <?php
 include_once "banco.php";
+include_once "DataMining.php";
 class querys {
 	private $con;
 	function __Construct() {
@@ -106,19 +107,18 @@ class querys {
 		$this->con->conecta ();
 		$sucesso = false;
 		$query = "SELECT * from pessoa where login like '{$user_login}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		if (mysql_num_rows ( $res ) == 0) {
+			$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$user_login}', '{$user_name}', '{$user_city}')";
+			
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 			
-			if (mysql_num_rows ( $res ) == 0) {
-				$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$user_login}', '{$user_name}', '{$user_city}')";
+			$sucesso = true;
+		} else {
+			$sucesso = false;
+		}
 		
-				$res = mysql_query ( $query ) or die ( mysql_error () );
-				
-				$sucesso = true;
-			}
-			else{
-				$sucesso = false;
-			}
-			
 		$this->con->fecha ();
 		
 		return $sucesso;
@@ -178,10 +178,10 @@ class querys {
 	function updateLike($user_login, $artist_uri, $rating) {
 		$artist_id = $this->addArtist ( $artist_uri );
 		$this->con->conecta ();
-	
+		
 		$query = "UPDATE curtida set nota={$rating} WHERE login ='{$user_login}' and id_artista = '{$artist_id}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-	
+		
 		return $res;
 	}
 	
@@ -219,12 +219,12 @@ class querys {
 		
 		$this->con->fecha ();
 		
-		return $rs; 
+		return $rs;
 	}
 	
 	// Retorna Usuário Completo
 	function getCompleteUser($user) {
-		$querys = new querys();
+		$querys = new querys ();
 		
 		$userData = $querys->getUser ( $user );
 		$userData ['amigos'] = array ();
@@ -345,5 +345,64 @@ class querys {
 		$this->con->fecha ();
 		
 		return $known;
+	}
+	
+	// Se cidade existe retorna id da cidade, se não insere e retorna o id
+	function addCity($city) {
+		$fb = new DataMining ();
+		$result = $fb->getLocationInfo ( $city );
+		$this->con->conecta ();
+		
+		$query = "SELECT * FROM cidade WHERE nome like '{$city}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		if (mysql_num_rows ( $res ) == 0) {
+			$query = "INSERT INTO cidade (nome,id_estado) VALUES ('{$city}',{$this->addState($result['state'])}) ";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			$query = "SELECT * FROM cidade WHERE nome like '{$city}'";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+		}
+		$rs = mysql_fetch_assoc ( $res );
+		$this->con->fecha ();
+		return $rs ['id'];
+	}
+	
+	// Se cidade existe retorna id da cidade, se não insere e retorna o id
+	function addState($state) {
+		$fb = new DataMining ();
+		$result = $fb->getLocationInfo ( $state );
+		$this->con->conecta ();
+		
+		$query = "SELECT * FROM estado WHERE nome like '{$state}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		if (mysql_num_rows ( $res ) == 0) {
+			$query = "INSERT INTO estado (nome,id_pais) VALUES ('{$state}',{$this->addCountry($result['country'])}) ";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			$query = "SELECT * FROM estado WHERE nome like '{$state}'";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+		}
+		$rs = mysql_fetch_assoc ( $res );
+		return $rs ['id'];
+	}
+	
+	// Se pais existe retorna id do pais, se não insere e retorna o id
+	function addCountry($country) {
+		$this->con->conecta ();
+		
+		$query = "SELECT * FROM pais WHERE nome like '{$country}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		if (mysql_num_rows ( $res ) == 0) {
+			$query = "INSERT INTO pais (nome) VALUES ('{$country}') ";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			$query = "SELECT * FROM pais WHERE nome like '{$country}'";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+		}
+		$rs = mysql_fetch_assoc ( $res );
+		return $rs ['id'];
 	}
 }
