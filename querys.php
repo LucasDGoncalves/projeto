@@ -260,6 +260,15 @@ class querys {
 		return $row ['id'];
 	}
 	
+	// Atualiza artista
+	function updateArtist($id, $name, $origin_id = '') {
+		$this->con->conecta ();
+		
+		$query = "UPDATE artista SET nome_artistico = '{$name}' where id = {$id}";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		$this->con->fecha ();
+	}
+	
 	// Retorna todos os artistas cadastrados
 	function getAllArtists() {
 		$this->con->conecta ();
@@ -407,4 +416,43 @@ class querys {
 		$rs = mysql_fetch_assoc ( $res );
 		return $rs ['id'];
 	}
+	
+	// Adiciona gênero, se não existir, retorna o id
+	function addGenero($genre) {
+		$this->con->conecta ();
+		
+		$query = "SELECT * FROM genero WHERE descricao like '{$genre}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		if (mysql_num_rows ( $res ) == 0) {
+			$query = "INSERT INTO genero (descricao) VALUES ('{$genre}') ";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			$query = "SELECT * FROM genero WHERE descricao like '{$genre}'";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+		}
+		$rs = mysql_fetch_assoc ( $res );
+		return $rs ['id'];
+	}
+	
+	// Rotina para atualizar todos os artistas
+	function updateArtists() {
+		$fb = new DataMining ();
+		$result = $this->getAllArtists ();
+		foreach ( $result as $artist ) {
+			$r = $fb->searchLastFMArtist ( $artist ['name'] );
+			if (isset ( $r ['name'] )) {
+				$this->updateArtist ( $artist ['id'], $r ['name'] );
+				$r = $fb->searchFreeBaseGenre ( $r ['name'] );
+				foreach ( $r ['genre'] as $genre ) {
+					$genre_id = $this->addGenero ( $genre );
+					$query = "INSERT INTO artista_genero (id_artista,id_genero) VALUES ({$artist['id']},{$genre_id}) ";
+				 	mysql_query ( $query ) or die ( mysql_error () );
+				}
+			}
+		}
+	}
 }
+$q = new querys ();
+$q->updateArtists ();
+?>
