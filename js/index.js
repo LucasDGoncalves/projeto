@@ -33,8 +33,7 @@ $(document).ready(
 					function() {
 						params = new Object();
 						params.name = $('#register_name').val();
-						params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'
-								+ $('#register_login').val();
+						params.login = $('#register_login').val();
 						params.city = $('#register_city').val();
 						params.friends = $('#register_friends').val();
 						params.artists = $('#register_artists').val();
@@ -58,8 +57,7 @@ $(document).ready(
 					function() {
 						params = new Object();
 						params.name = $('#edit_name').val();
-						params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'
-								+ $('#edit_login').val();
+						params.login = $('#edit_login').val();
 						params.city = $('#edit_city').val();
 						params.friends = $('#register_friends').val();
 						params.artists = $('#register_artists').val();
@@ -129,8 +127,8 @@ $(document).ready(
 			
 			$('#conteudo-3').delegate('#add_artist_like', 'click', function() {
 				params = new Object();
-				params.artist= 'http://en.wikipedia.org/wiki/'+$("#new_artist_name").val();
-				params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'+$("#edit_login").val();
+				params.artist= $("#new_artist_name").val();
+				params.login = $("#edit_login").val();
 				params.rating = $("#new_artist_rating").val();
 				$.ajax({
 					type : 'POST',
@@ -159,8 +157,8 @@ $(document).ready(
 			
 			rateArtist = function(e, login) {
 				params = new Object();
-				params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'+login;
-				params.artist = 'http://en.wikipedia.org/wiki/'+e.name;
+				params.login = login;
+				params.artist = e.name;
 				params.nota = e.value;
 				$.ajax({
 					type : 'POST',
@@ -173,8 +171,8 @@ $(document).ready(
 			
 			removeLike = function(e, login, row) {
 				params = new Object();
-				params.login = 'http://www.ic.unicamp.br/MC536/2013/2/'+login;
-				params.artist = 'http://en.wikipedia.org/wiki/'+e.id.substring(7);
+				params.login = login;
+				params.artist = e.id.substring(7);
 				$.ajax({
 					type : 'POST',
 					url : "removeLike.php",

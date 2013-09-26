@@ -110,7 +110,7 @@ class querys {
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		if (mysql_num_rows ( $res ) == 0) {
-			$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$user_login}', '{$user_name}', '{$user_city}')";
+			$query = "INSERT into pessoa (login, nome, id_cidade_natal) VALUES ('{$user_login}', '{$user_name}', {$this->addCity($user_city)})";
 			
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 			
@@ -128,7 +128,7 @@ class querys {
 	function updateUser($user_login, $user_name, $user_city) {
 		$this->con->conecta ();
 		
-		$query = "UPDATE pessoa SET nome = '{$user_name}',  cidade_natal = '{$user_city}' where login like '{$user_login}'";
+		$query = "UPDATE pessoa SET nome = '{$user_name}',  id_cidade_natal = {$this->addCity($user_city)} where login like '{$user_login}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		$this->con->fecha ();
@@ -138,7 +138,7 @@ class querys {
 	function deleteUser($user_login, $user_name, $user_city) {
 		$this->con->conecta ();
 		
-		$query = "DELETE FROM pessoa where login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}'";
+		$query = "DELETE FROM pessoa where login like '{$user_login}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		$this->con->fecha ();
@@ -211,7 +211,7 @@ class querys {
 	function getUser($user) {
 		$this->con->conecta ();
 		
-		$query = "SELECT * FROM pessoa where login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}'";
+		$query = "SELECT pessoa.login, pessoa.nome, cidade.nome as cidade_natal FROM pessoa left join cidade on pessoa.id_cidade_natal = cidade.id where login like '{$user}' ";
 		
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
@@ -291,7 +291,7 @@ class querys {
 	function getFavoriteArtists($user) {
 		$this->con->conecta ();
 		
-		$query = "SELECT nome_artistico, nota, id FROM artista, curtida WHERE login like 'http://www.ic.unicamp.br/MC536/2013/2/{$user}' AND id_artista=artista.id ";
+		$query = "SELECT nome_artistico, nota, id FROM artista, curtida WHERE login like '{$user}' AND id_artista=artista.id ";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		$favoriteArtists = array ();
 		$i = 0;
@@ -329,7 +329,7 @@ class querys {
 	function getUnKnownUsers($user_login) {
 		$this->con->conecta ();
 		
-		$query = "SELECT * FROM pessoa where login <> 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}')";
+		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login not in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		$unknown = array ();
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
@@ -344,7 +344,7 @@ class querys {
 	function getKnownUsers($user_login) {
 		$this->con->conecta ();
 		
-		$query = "SELECT * FROM pessoa where login <> 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}' and login in (select conhecido from conhecimento where conhecedor = 'http://www.ic.unicamp.br/MC536/2013/2/{$user_login}')";
+		$query = "SELECT * FROM pessoa where login <> '{$user_login}' and login in (select conhecido from conhecimento where conhecedor = '{$user_login}')";
 		
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		$known = array ();
@@ -373,7 +373,6 @@ class querys {
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 		}
 		$rs = mysql_fetch_assoc ( $res );
-		$this->con->fecha ();
 		return $rs ['id'];
 	}
 	
@@ -435,6 +434,18 @@ class querys {
 		return $rs ['id'];
 	}
 	
+	// Rotina para atualizar cidade natal de pessoas
+	function updatePessoaCidadeNatal() {
+		$resp = $this->getAllUsers ();
+		foreach ( $resp as $user ) {
+			if (strcmp ( $user ['city'], '' ) !== 0) {
+				$query = "UPDATE pessoa SET id_cidade_natal = {$this->addCity($user['cidade_natal'])} where login like '{$user['login']}'";
+				mysql_query ( $query ) or die ( mysql_error () );
+			}
+		}
+		$this->con->fecha ();
+	}
+	
 	// Rotina para atualizar todos os artistas
 	function updateArtists() {
 		$fb = new DataMining ();
@@ -446,13 +457,18 @@ class querys {
 				$r = $fb->searchFreeBaseGenre ( $r ['name'] );
 				foreach ( $r ['genre'] as $genre ) {
 					$genre_id = $this->addGenero ( $genre );
-					$query = "INSERT INTO artista_genero (id_artista,id_genero) VALUES ({$artist['id']},{$genre_id}) ";
-				 	mysql_query ( $query ) or die ( mysql_error () );
+					$query = "SELECT * FROM artista_genero WHERE id_artista = {$artist['id']} and id_genero = {$genre_id}";
+					$res = mysql_query ( $query ) or die ( mysql_error () );
+					
+					if (mysql_num_rows ( $res ) == 0) {
+						$query = "INSERT INTO artista_genero (id_artista,id_genero) VALUES ({$artist['id']},{$genre_id}) ";
+						mysql_query ( $query ) or die ( mysql_error () );
+					}
 				}
 			}
 		}
 	}
 }
-$q = new querys ();
-$q->updateArtists ();
+// $q = new querys ();
+// $q->updatePessoaCidadeNatal ();
 ?>
