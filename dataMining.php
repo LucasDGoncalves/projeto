@@ -94,7 +94,7 @@ class DataMining {
 	}
 	public function searchLastFMCorrection($artist, $data = 'json') {
 		if (! empty ( $artist )) {
-			$url = 'http://ws.audioscrobbler.com/2.0/?' . $query;
+			$url = 'http://ws.audioscrobbler.com/2.0/?';
 			$url .= 'method=' . urlencode ( 'artist.getcorrection' );
 			$url .= '&artist=' . urlencode ( $artist );
 			$url .= '&api_key=' . $this->api_key_lastFM;
@@ -113,11 +113,11 @@ class DataMining {
 	}
 	public function searchLastFMArtist($artist, $data = 'json') {
 		if (! empty ( $artist )) {
-			$result = $this->searchLastFMCorrection ( $artist );
+			$result = $this->searchLastFMCorrection ( $artist['name'] );
 			if (! empty ( $result )) {
 				$artist = $result;
 			}
-			$url = 'http://ws.audioscrobbler.com/2.0/?' . $query;
+			$url = 'http://ws.audioscrobbler.com/2.0/?';
 			$url .= 'method=' . urlencode ( 'artist.getinfo' );
 			$url .= '&artist=' . urlencode ( $artist );
 			$url .= '&api_key=' . $this->api_key_lastFM;
