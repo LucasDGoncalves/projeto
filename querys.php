@@ -434,12 +434,30 @@ class querys {
 		return $rs ['id'];
 	}
 	
+	// Adiciona gênero, se não existir, retorna o id
+	function addSimilar($similar) {
+		$this->con->conecta ();
+		
+		$query = "SELECT * FROM similar WHERE descricao like '{$similar}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		
+		if (mysql_num_rows ( $res ) == 0) {
+			$query = "INSERT INTO similar (descricao) VALUES ('{$similar}') ";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			$query = "SELECT * FROM similar WHERE descricao like '{$similar}'";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+		}
+		$rs = mysql_fetch_assoc ( $res );
+		return $rs ['id'];
+	}
+	
 	// Rotina para atualizar cidade natal de pessoas
 	function updatePessoaCidadeNatal() {
 		$resp = $this->getAllUsers ();
 		foreach ( $resp as $user ) {
 			if (strcmp ( $user ['city'], '' ) !== 0) {
-				$query = "UPDATE pessoa SET id_cidade_natal = {$this->addCity($user['cidade_natal'])} where login like '{$user['login']}'";
+				$query = "UPDATE pessoa SET id_cidade_natal = {$this->addCity($user['city'])} where login like '{$user['login']}'";
 				mysql_query ( $query ) or die ( mysql_error () );
 			}
 		}
@@ -454,6 +472,15 @@ class querys {
 			$r = $fb->searchLastFMArtist ( $artist ['name'] );
 			if (isset ( $r ['name'] )) {
 				$this->updateArtist ( $artist ['id'], $r ['name'] );
+				foreach ( $r ['similar'] as $similar ) {
+					$similar_id = $this->addSimilar ( $similar );
+					$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
+					$res = mysql_query ( $query ) or die ( mysql_error () );
+					if (mysql_num_rows ( $res ) == 0) {
+						$query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
+						mysql_query ( $query ) or die ( mysql_error () );
+					}
+				}
 				$r = $fb->searchFreeBaseGenre ( $r ['name'] );
 				foreach ( $r ['genre'] as $genre ) {
 					$genre_id = $this->addGenero ( $genre );
@@ -469,6 +496,4 @@ class querys {
 		}
 	}
 }
-// $q = new querys ();
-// $q->updatePessoaCidadeNatal ();
 ?>
