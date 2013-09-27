@@ -261,10 +261,10 @@ class querys {
 	}
 	
 	// Atualiza artista
-	function updateArtist($id, $name, $origin_id = '') {
+	function updateArtist($id, $name, $origin) {
 		$this->con->conecta ();
 		
-		$query = "UPDATE artista SET nome_artistico = '{$name}' where id = {$id}";
+		$query = "UPDATE artista SET nome_artistico = '{$name}', pais = '{$origin}' where id = {$id}";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		$this->con->fecha ();
 	}
@@ -471,9 +471,9 @@ class querys {
 		foreach ( $result as $artist ) {
 			$r = $fb->searchLastFMArtist ( $artist ['name'] );
 			if (isset ( $r ['name'] )) {
-				$this->updateArtist ( $artist ['id'], $r ['name'] );
-				foreach ( $r ['similar']['artist'] as $similar ) {
-					$similar_id = $this->addSimilar ( $similar['name'] );
+				$this->updateArtist ( $artist ['id'], $r ['name'], $r ['placeformed'] );
+				foreach ( $r ['similar'] ['artist'] as $similar ) {
+					$similar_id = $this->addSimilar ( $similar ['name'] );
 					$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
 					$res = mysql_query ( $query ) or die ( mysql_error () );
 					if (mysql_num_rows ( $res ) == 0) {
@@ -496,4 +496,6 @@ class querys {
 		}
 	}
 }
+$q = new querys();
+$q->updateArtists();
 ?>
