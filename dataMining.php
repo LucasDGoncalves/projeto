@@ -92,7 +92,7 @@ class DataMining {
 		}
 		return $location;
 	}
-	public function searchLastFMCorrection($artist, $data = json) {
+	public function searchLastFMCorrection($artist, $data = 'json') {
 		if (! empty ( $artist )) {
 			$url = 'http://ws.audioscrobbler.com/2.0/?' . $query;
 			$url .= 'method=' . urlencode ( 'artist.getcorrection' );
@@ -111,7 +111,7 @@ class DataMining {
 		
 		return $result;
 	}
-	public function searchLastFMArtist($artist, $data = json) {
+	public function searchLastFMArtist($artist, $data = 'json') {
 		if (! empty ( $artist )) {
 			$result = $this->searchLastFMCorrection ( $artist );
 			if (! empty ( $result )) {

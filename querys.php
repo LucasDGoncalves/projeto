@@ -110,7 +110,7 @@ class querys {
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		if (mysql_num_rows ( $res ) == 0) {
-			$query = "INSERT into pessoa (login, nome, id_cidade_natal) VALUES ('{$user_login}', '{$user_name}', {$this->addCity($user_city)})";
+			$query = "INSERT into pessoa (login, nome, id_cidade_natal) VALUES ('{$user_login}', '{$user_name}', '{$user_city}')";
 			
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 			
@@ -128,7 +128,7 @@ class querys {
 	function updateUser($user_login, $user_name, $user_city) {
 		$this->con->conecta ();
 		
-		$query = "UPDATE pessoa SET nome = '{$user_name}',  id_cidade_natal = {$this->addCity($user_city)} where login like '{$user_login}'";
+		$query = "UPDATE pessoa SET nome = '{$user_name}',  id_cidade_natal = '{$user_cit}' where login like '{$user_login}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		$this->con->fecha ();
@@ -376,7 +376,7 @@ class querys {
 		return $rs ['id'];
 	}
 	
-	// Se cidade existe retorna id da cidade, se não insere e retorna o id
+	// Se estado existe retorna id da cidade, se não insere e retorna o id
 	function addState($state) {
 		$fb = new DataMining ();
 		$result = $fb->getLocationInfo ( $state );
