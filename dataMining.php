@@ -94,16 +94,22 @@ class DataMining {
 	}
 	public function searchLastFMCorrection($artist, $data = 'json') {
 		if (! empty ( $artist )) {
+
+			
 			$url = 'http://ws.audioscrobbler.com/2.0/?';
 			$url .= 'method=' . urlencode ( 'artist.getcorrection' );
-			$url .= '&artist=' . urlencode ( $artist );
+			$url .= '&artist=' . urlencode ( $artist['name'] );
 			$url .= '&api_key=' . $this->api_key_lastFM;
 			$url .= '&format=' . $data;
 			
-			$raw_result = json_decode ( file_get_contents ( $url ), true );
-			$raw_result = $raw_result ['corrections'];
-			if (strlen ( $raw_reult ) == 0) {
-				$result = false;
+			echo $url.'<br>';
+			
+			$json = file_get_contents($url);
+			$raw_result = json_decode ($json, true);
+ 			$raw_result = $raw_result['corrections'];
+			
+ 			if (count($raw_result, 1) <= 1) {
+				$result = $artist['name'];
 			} else {
 				$result = $raw_result ['correction'] ['artist'] ['name'];
 			}
@@ -113,6 +119,7 @@ class DataMining {
 	}
 	public function searchLastFMArtist($artist, $data = 'json') {
 		if (! empty ( $artist )) {
+
 			$result = $this->searchLastFMCorrection ( $artist['name'] );
 			if (! empty ( $result )) {
 				$artist = $result;
@@ -126,9 +133,9 @@ class DataMining {
 			$raw_result = json_decode ( file_get_contents ( $url ), true );
 			$raw_result = $raw_result ['artist'];
 			
-			$result ['name'] = $raw_result ['name'];
-			$result ['similar'] = $raw_result ['similar'];
-			$result ['placeformed'] = $raw_result ['bio'] ['placeformed'];
+			//$result ['name'] = $raw_result ['name'];
+			//$result ['similar'] = $raw_result ['similar'];
+			//$result ['placeformed'] = $raw_result ['bio'] ['placeformed'];
 		}
 		
 		return $result;

@@ -36,6 +36,7 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 	echo "<ul>
 	<li><a id='tab1_button' href='#tabs-1'>Home</a></li>
 	<li><a id='tab2_button' href='#tabs-2'>Usuário</a></li>
+	<li><a id='tab3_button' href='#tabs-3'>Estatísticas</a></li>
 	</ul>";
 	
 	echo "<div id='tabs-1' style='height:88%'>";
@@ -53,6 +54,13 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 	echo "<div id='conteudo-2' style='float:left; widht:50%'> Busque um usuário para seu perfil aparecer nesta aba</div>
 			<div id='conteudo-3' style='float:right; margin-right:100'></div>
 		</div>";
+	
+	echo "<div id='tabs-3' style='height:88%'>";
+	echo "<div id='conteudo-4' style='float:left; widht:50%'> Selecione a estatística desejada</div>
+			<select><option value=1>1</option></select>
+			<div id='conteudo-5' style='float:right; margin-right:100'></div>
+		</div>";
+	
 	echo "</div>";
 } else {
 	// mostrar tela de login
