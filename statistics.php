@@ -139,10 +139,11 @@ class statistics {
 		$query = "SELECT artista.nome_artistico, COUNT(*), AVG(curtida.nota), STD(curtida.nota)  
 					FROM artista, curtida
 					where curtida.id_artista = artista.id
-					group by artista.id";
+					group by artista.id
+					order by COUNT(*) desc";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			$result [] = $rs;
+			$result [] = $rs['COUNT(*)'];
 		}
 		$this->con->fecha ();
 		return $result;

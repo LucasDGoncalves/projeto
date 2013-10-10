@@ -52,5 +52,32 @@ switch ($i) {
 		}
 		break;
 }
+ $res = $stat->s9();
+
+/* Include all the classes */
+include("pDraw.class.php");
+include("pImage.class.php");
+include("pData.class.php");
+
+/* Create your dataset object */
+$myData = new pData();
+
+/* Add data in your dataset */
+$myData->addPoints($res);
+
+/* Create a pChart object and associate your dataset */
+$myPicture = new pImage(700,230,$myData);
+
+/* Define the boundaries of the graph area */
+$myPicture->setGraphArea(60,40,670,190);
+
+/* Draw the scale, keep everything automatic */
+$myPicture->drawScale();
+
+/* Draw the scale, keep everything automatic */
+$myPicture->drawSplineChart();
+
+/* Build the PNG file and send it to the web browser */
+$myPicture->Stroke();
 
 ?>
