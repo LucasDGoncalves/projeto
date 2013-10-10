@@ -1,5 +1,10 @@
 <?php
 include_once "statistics.php";
+include ("Stat.class.php");
+include ("pDraw.class.php");
+include ("pImage.class.php");
+include ("pData.class.php");
+
 $stat = new statistics ();
 $case = $_POST ['statistic_id'];
 
@@ -51,13 +56,23 @@ switch ($i) {
 			echo $res [$i] ['conhecido'];
 		}
 		break;
+	
+	case 8 :
+		$res = $stat->s9 ();
+		$quart = new Stat ();
+		echo "quartile(25th, 50th, 75th percentile) = " . implode ( ",	", $quart->quartiles ( $res ) ) . "<br />";
+		break;
+	case 9 :
+		/*gráfico*/
+		break;
+	case 10 :
+		/*gráfico*/
+		break;
+	case 11 :
+		/*gráfico*/
+		break;
 }
- $res = $stat->s9();
-
-/* Include all the classes */
-include("pDraw.class.php");
-include("pImage.class.php");
-include("pData.class.php");
+$res = $stat->s9 ();
 
 /* Create your dataset object */
 $myData = new pData();
