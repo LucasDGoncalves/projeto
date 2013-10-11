@@ -146,7 +146,7 @@ class statistics {
 					order by COUNT(*) desc";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			$result [] = $rs['COUNT(*)'];
+			$result [] = $rs ['COUNT(*)'];
 		}
 		$this->con->fecha ();
 		return $result;
@@ -161,7 +161,8 @@ class statistics {
 					order by a.qtd desc";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			$result [] = $rs;
+			$result ['qtd'] [] = $rs ['qtd'];
+			$result ['amount'] [] = $rs ['amount'];
 		}
 		$this->con->fecha ();
 		return $result;
@@ -175,7 +176,8 @@ class statistics {
 					FROM curtida GROUP BY id_artista) as a GROUP BY a.qtd";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			$result [] = $rs;
+			$result ['qtd'] [] = $rs ['qtd'];
+			$result ['amount'] [] = $rs ['amount'];
 		}
 		$this->con->fecha ();
 		return $result;
@@ -192,7 +194,7 @@ class statistics {
 					order by count(*) desc";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			$result [] = $rs['Count'];
+			$result [] = $rs ['Count'];
 		}
 		$this->con->fecha ();
 		return $result;

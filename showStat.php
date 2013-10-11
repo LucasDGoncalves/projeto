@@ -4,6 +4,7 @@ include ("Stat.class.php");
 include ("pDraw.class.php");
 include ("pImage.class.php");
 include ("pData.class.php");
+include ("pScatter.class.php");
 
 $stat = new statistics ();
 $i = $_POST ['func'];
@@ -121,10 +122,142 @@ switch ($i) {
 		echo "Distribuição de Exponencial";
 		break;
 	case 10 :
-		/*gráfico*/
+		$res = $stat->s10 ();
+		
+		/* Create the pData object */
+		$myData = new pData ();
+		
+		/* Create the X axis and the binded series */
+		$myData->addPoints ( $res ['qtd'], "Probe 1" );
+		$myData->setAxisXY ( 0, AXIS_X );
+		$myData->setAxisPosition ( 0, AXIS_POSITION_BOTTOM );
+		
+		/* Create the Y axis and the binded series */
+		$myData->addPoints ( $res ['amount'], "Probe 2" );
+		$myData->setSerieOnAxis ( "Probe 2", 1 );
+		
+		/* Create the 2nd scatter chart binding */
+		$myData->setScatterSerie ( "Probe 1", "Probe 2", 1 );
+		
+		/* Create the pChart object */
+		$myPicture = new pImage ( 400, 400, $myData );
+		
+		/* Write the picture title */
+		$myPicture->setFontProperties ( "Silkscreen.ttf", 6 );
+		$myPicture->drawText ( 10, 13, "drawScatterLineChart() - Draw a scatter line chart", array (
+				"R" => 255,
+				"G" => 255,
+				"B" => 255 
+		) );
+		
+		/* Add a border to the picture */
+		$myPicture->drawRectangle ( 0, 0, 399, 399, array (
+				"R" => 0,
+				"G" => 0,
+				"B" => 0 
+		) );
+		
+		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
+		
+		/* Set the graph area */
+		$myPicture->setGraphArea ( 50, 50, 350, 350 );
+		
+		/* Create the Scatter chart object */
+		$myScatter = new pScatter ( $myPicture, $myData );
+		
+		/* Draw the scale */
+		$myScatter->drawScatterScale ();
+		
+		/* Turn on shadow computing */
+		$myPicture->setShadow ( TRUE, array (
+				"X" => 1,
+				"Y" => 1,
+				"R" => 0,
+				"G" => 0,
+				"B" => 0,
+				"Alpha" => 10 
+		) );
+		
+		/* Draw a scatter plot chart */
+		$myScatter->drawScatterLineChart ();
+		
+		/* Draw the legend */
+		$myScatter->drawScatterLegend ( 280, 380, array (
+				"Mode" => LEGEND_HORIZONTAL,
+				"Style" => LEGEND_NOBORDER 
+		) );
+		
+		/* Render the picture (choose the best way) */
+		$myPicture->autoOutput ( "pictures/example.drawScatterLineChart.png" );
 		break;
 	case 11 :
-		/*gráfico*/
+		$res = $stat->s11 ();
+		
+		/* Create the pData object */
+		$myData = new pData ();
+		
+		/* Create the X axis and the binded series */
+		$myData->addPoints ( $res ['qtd'], "Probe 1" );
+		$myData->setAxisXY ( 0, AXIS_X );
+		$myData->setAxisPosition ( 0, AXIS_POSITION_BOTTOM );
+		
+		/* Create the Y axis and the binded series */
+		$myData->addPoints ( $res ['amount'], "Probe 2" );
+		$myData->setSerieOnAxis ( "Probe 2", 1 );
+		
+		/* Create the 2nd scatter chart binding */
+		$myData->setScatterSerie ( "Probe 1", "Probe 2", 1 );
+		
+		/* Create the pChart object */
+		$myPicture = new pImage ( 400, 400, $myData );
+		
+		/* Write the picture title */
+		$myPicture->setFontProperties ( "Silkscreen.ttf", 6 );
+		$myPicture->drawText ( 10, 13, "drawScatterLineChart() - Draw a scatter line chart", array (
+				"R" => 255,
+				"G" => 255,
+				"B" => 255 
+		) );
+		
+		/* Add a border to the picture */
+		$myPicture->drawRectangle ( 0, 0, 399, 399, array (
+				"R" => 0,
+				"G" => 0,
+				"B" => 0 
+		) );
+		
+		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
+		
+		/* Set the graph area */
+		$myPicture->setGraphArea ( 50, 50, 350, 350 );
+		
+		/* Create the Scatter chart object */
+		$myScatter = new pScatter ( $myPicture, $myData );
+		
+		/* Draw the scale */
+		$myScatter->drawScatterScale ();
+		
+		/* Turn on shadow computing */
+		$myPicture->setShadow ( TRUE, array (
+				"X" => 1,
+				"Y" => 1,
+				"R" => 0,
+				"G" => 0,
+				"B" => 0,
+				"Alpha" => 10 
+		) );
+		
+		/* Draw a scatter plot chart */
+		$myScatter->drawScatterLineChart ();
+		
+		/* Draw the legend */
+		$myScatter->drawScatterLegend ( 280, 380, array (
+				"Mode" => LEGEND_HORIZONTAL,
+				"Style" => LEGEND_NOBORDER 
+		) );
+		
+		/* Render the picture (choose the best way) */
+		$myPicture->autoOutput ( "pictures/example.drawScatterLineChart.png" );
 		break;
 	case 12 :
 		$res = $stat->s12 ();
