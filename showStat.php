@@ -6,20 +6,20 @@ include ("pImage.class.php");
 include ("pData.class.php");
 
 $stat = new statistics ();
-$case = $_POST ['statistic_id'];
+$i = $_POST ['func'];
 
 switch ($i) {
 	// List artist
 	case 1 :
 		$res = $stat->s1 ();
-		echo "Rating Médio: " + $res ["Media"];
-		echo "Desvio Padrão: " + $res ["Desvio"];
+		echo "Rating Médio: ".$res ["media"].'<br>';
+		echo "Desvio Padrão: ".$res ["desvio"];
 		break;
 	
 	case 2 :
 		$res = $stat->s2 ();
 		for($i = 0; $i < 20; $i ++) {
-			echo $res [$i] ['Nome'];
+			echo $res[$i]['Nome'].'<br>';
 		}
 		
 		break;

@@ -472,6 +472,7 @@ class querys {
 // 						mysql_query ( $query ) or die ( mysql_error () );
 // 					}
 // 				}
+
 				$r = $fb->searchFreeBaseGenre ( $r ['name'] );
 				foreach ( $r ['genre'] as $genre ) {
 					$genre_id = $this->addGenero ( $genre );

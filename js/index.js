@@ -87,6 +87,26 @@ $(document).ready(
 
 				});
 			});
+			
+			$('#showStat').change(function() {
+				params = new Object();
+				params.func = $('#showStat').val();
+				$.ajax({
+					type : 'POST',
+					url : "showStat.php",
+					data : params
+				}).done(function(msg) {
+					$("#conteudo-5").html(msg);
+
+//					$("#usersList").tablesorter({
+//						widthFixed : true,
+//						widgets : [ 'zebra' ]
+//					}).tablesorterPager({
+//						container : $("#pager")
+//					});
+
+				});
+			});
 
 			loadUser = function(login) {
 				$("#conteudo-2").hide();

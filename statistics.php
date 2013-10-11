@@ -10,10 +10,11 @@ class statistics {
 	function s1() {
 		// cria cconecta ao banco
 		$this->con->conecta ();
-		$query = "SELECT AVG(curtida.nota) as Media, STD(curtida.nota)  as Desvio
+		$query = "SELECT AVG(curtida.nota) as media, STD(curtida.nota)  as desvio
 					FROM artista, curtida";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		$result [] = $rs;
+		$rs = mysql_fetch_assoc($res);
+		$result = $rs;
 		$this->con->fecha ();
 		return $result;
 	}

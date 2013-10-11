@@ -94,7 +94,6 @@ class DataMining {
 	}
 	public function searchLastFMCorrection($artist, $data = 'json') {
 		if (! empty ( $artist )) {
-
 			
 			$url = 'http://ws.audioscrobbler.com/2.0/?';
 			$url .= 'method=' . urlencode ( 'artist.getcorrection' );
