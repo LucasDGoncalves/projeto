@@ -9,7 +9,7 @@ include ("pScatter.class.php");
 $stat = new statistics ();
 $i = $_POST ['func'];
 
-switch ($i) {
+switch (10) {
 	// List artist
 	case 1 :
 		$res = $stat->s1 ();
@@ -98,7 +98,8 @@ switch ($i) {
 		$myData = new pData ();
 		
 		/* Add data in your dataset */
-		$myData->addPoints ( $res );
+		$myData->addPoints ( $res);
+		
 		
 		/* Create a pChart object and associate your dataset */
 		$myPicture = new pImage ( 700, 230, $myData );
@@ -119,7 +120,7 @@ switch ($i) {
 		$myPicture->drawLineChart ();
 		header ( "Content-Type: image/png" );
 		$myPicture->Render ( null );
-		echo "Distribuição de Exponencial";
+		echo "Distribuição Exponencial";
 		break;
 	case 10 :
 		$res = $stat->s10 ();
@@ -131,13 +132,19 @@ switch ($i) {
 		$myData->addPoints ( $res ['qtd'], "Probe 1" );
 		$myData->setAxisXY ( 0, AXIS_X );
 		$myData->setAxisPosition ( 0, AXIS_POSITION_BOTTOM );
+		$myData->setAxisName(0,"Artistas Curtidos");
+		
 		
 		/* Create the Y axis and the binded series */
 		$myData->addPoints ( $res ['amount'], "Probe 2" );
 		$myData->setSerieOnAxis ( "Probe 2", 1 );
+		$myData->setAxisXY ( 1, AXIS_Y );
+		$myData->setAxisName(1,"Nº de Pessoas");
+		
 		
 		/* Create the 2nd scatter chart binding */
 		$myData->setScatterSerie ( "Probe 1", "Probe 2", 1 );
+		$myData->setScatterSerieDescription(0,"This year");
 		
 		/* Create the pChart object */
 		$myPicture = new pImage ( 400, 400, $myData );
@@ -189,6 +196,7 @@ switch ($i) {
 		
 		/* Render the picture (choose the best way) */
 		$myPicture->autoOutput ( "pictures/example.drawScatterLineChart.png" );
+		echo "Distribuição Gaussiana";
 		break;
 	case 11 :
 		$res = $stat->s11 ();
@@ -200,10 +208,13 @@ switch ($i) {
 		$myData->addPoints ( $res ['qtd'], "Probe 1" );
 		$myData->setAxisXY ( 0, AXIS_X );
 		$myData->setAxisPosition ( 0, AXIS_POSITION_BOTTOM );
+		$myData->setAxisName(0,"Curtidas");
 		
 		/* Create the Y axis and the binded series */
 		$myData->addPoints ( $res ['amount'], "Probe 2" );
+		$myData->setAxisXY ( 1, AXIS_Y );
 		$myData->setSerieOnAxis ( "Probe 2", 1 );
+		$myData->setAxisName(1,"Nº de Artistas");
 		
 		/* Create the 2nd scatter chart binding */
 		$myData->setScatterSerie ( "Probe 1", "Probe 2", 1 );
@@ -258,7 +269,9 @@ switch ($i) {
 		
 		/* Render the picture (choose the best way) */
 		$myPicture->autoOutput ( "pictures/example.drawScatterLineChart.png" );
+		echo "Distribuição Exponencial";
 		break;
+	
 	case 12 :
 		$res = $stat->s12 ();
 		
@@ -287,7 +300,7 @@ switch ($i) {
 		$myPicture->drawLineChart ();
 		header ( "Content-Type: image/png" );
 		$myPicture->Render ( null );
-		echo "Distribuição de Exponencial";
+		echo "Distribuição Exponencial";
 		break;
 }
 
