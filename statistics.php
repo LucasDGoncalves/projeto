@@ -154,7 +154,8 @@ class statistics {
 		// cria cconecta ao banco
 		$this->con->conecta ();
 		$query = "SELECT a.qtd, count(*) as amount from ( SELECT login, COUNT( * ) as qtd
-					FROM curtida GROUP BY login) as a GROUP BY a.qtd";
+					FROM curtida GROUP BY login) as a GROUP BY a.qtd
+					order by a.qtd desc";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
 			$result [] = $rs;
@@ -188,7 +189,7 @@ class statistics {
 					order by count(*) desc";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			$result [] = $rs['count(*)'];
+			$result [] = $rs['Count'];
 		}
 		$this->con->fecha ();
 		return $result;

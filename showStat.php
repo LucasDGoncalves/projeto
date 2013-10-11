@@ -63,7 +63,33 @@ switch ($i) {
 		echo "Popularidade(1º,2º,3º quartis) = " . implode ( ",	", $quart->quartiles ( $res ) ) . "<br />";
 		break;
 	case 9 :
-		/*gráfico*/
+		$res = $stat->s9 ();
+		
+		/* Create your dataset object */
+		$myData = new pData ();
+		
+		/* Add data in your dataset */
+		$myData->addPoints ( $res );
+		
+		/* Create a pChart object and associate your dataset */
+		$myPicture = new pImage ( 700, 230, $myData );
+		
+		/* Define the boundaries of the graph area */
+		$myPicture->setGraphArea ( 60, 40, 670, 190 );
+		
+		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
+		
+		/* Draw the scale, keep everything automatic */
+		$myPicture->drawScale ( array (
+				"LabelSkip" => 40 
+		) );
+		
+		/* Draw the scale, keep everything automatic */
+		$myPicture->drawSplineChart ();
+		
+		$myPicture->drawLineChart ();
+		header ( "Content-Type: image/png" );
+		$myPicture->Render ( null );
 		echo "Distribuição de Exponencial";
 		break;
 	case 10 :
@@ -73,32 +99,35 @@ switch ($i) {
 		/*gráfico*/
 		break;
 	case 12 :
-		/*gráfico popularidade dos gêneros*/
+		$res = $stat->s12 ();
+		
+		/* Create your dataset object */
+		$myData = new pData ();
+		
+		/* Add data in your dataset */
+		$myData->addPoints ( $res );
+		
+		/* Create a pChart object and associate your dataset */
+		$myPicture = new pImage ( 700, 230, $myData );
+		
+		/* Define the boundaries of the graph area */
+		$myPicture->setGraphArea ( 60, 40, 670, 190 );
+		
+		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
+		
+		/* Draw the scale, keep everything automatic */
+		$myPicture->drawScale ( array (
+				"LabelSkip" => 40 
+		) );
+		
+		/* Draw the scale, keep everything automatic */
+		$myPicture->drawSplineChart ();
+		
+		$myPicture->drawLineChart ();
+		header ( "Content-Type: image/png" );
+		$myPicture->Render ( null );
+		echo "Distribuição de Exponencial";
 		break;
 }
-$res = $stat->s9 ();
 
-/* Create your dataset object */
-$myData = new pData();
-
-/* Add data in your dataset */
-$myData->addPoints($res);
-
-/* Create a pChart object and associate your dataset */
-$myPicture = new pImage(700,230,$myData);
-
-/* Define the boundaries of the graph area */
-$myPicture->setGraphArea(60,40,670,190);
-
-$myPicture->setFontProperties("Fonts/tahoma.ttf",8);
-
-/* Draw the scale, keep everything automatic */
-$myPicture->drawScale(array("LabelSkip"=>40));
-
-/* Draw the scale, keep everything automatic */
-$myPicture->drawSplineChart();
-
-$myPicture->drawLineChart();
-header("Content-Type: image/png");
-$myPicture->Render(null);
 ?>
