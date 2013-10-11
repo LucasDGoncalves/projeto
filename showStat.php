@@ -19,23 +19,33 @@ switch ($i) {
 	case 2 :
 		$res = $stat->s2 ();
 		echo '<table>';
-		echo '<tr><th>Pos.</th><th>Artista</th> <th>Pos.</th><th>Artista</th></tr>';
+		echo '<tr align="left"><th>#</th><th>Artista</th><th>Nota</th> <th>#</th><th>Artista</th><th>Nota</th></tr>';
 		for($i = 0; $i < 10; $i++) {
 			$pos = $i+1;
-			echo "<tr><td>{$pos}</td><td>{$res[$i]['Nome']}</td>";
+			$media = number_format($res[$i]['Media'], 2, ',', ' ');
+			echo "<tr><td>{$pos}</td><td>{$res[$i]['Nome']}</td><td>{$media}</td>";
 			$pos = $pos+10;
 			$i2 = $pos-1;
-			echo "<td>{$pos}</td><td>{$res[$i2]['Nome']}</td></tr>";
+			$media = number_format($res[$i2]['Media'], 2, ',', ' ');
+			echo "<td>{$pos}</td><td>{$res[$i2]['Nome']}</td><td>{$media}</td></tr>";
 		}
 		echo '</table>';
 		break;
 	case 3 :
 		$res = $stat->s3 ();
-		for($i = 0; $i < 20; $i ++) {
-			echo $res [$i] ['Nome'];
+		echo '<table>';
+		echo '<tr align="left"><th>#</th><th>Artista</th><th>Nota</th> <th>#</th><th>Artista</th><th>Nota</th></tr>';
+		for($i = 0; $i < 10; $i++) {
+			$pos = $i+1;
+			$media = number_format($res[$i]['Media'], 2, ',', ' ');
+			echo "<tr><td>{$pos}</td><td>{$res[$i]['Nome']}</td><td>{$media}</td>";
+			$pos = $pos+10;
+			$i2 = $pos-1;
+			$media = number_format($res[$i2]['Media'], 2, ',', ' ');
+			echo "<td>{$pos}</td><td>{$res[$i2]['Nome']}</td><td>{$media}</td></tr>";
 		}
-		break;
-	
+		echo '</table>';
+		break;	
 	case 4 :
 		$res = $stat->s4 ();
 		for($i = 0; $i < 10; $i ++) {

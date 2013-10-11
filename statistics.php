@@ -51,6 +51,8 @@ class statistics {
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
 			$result [] = $rs;
 		}
+		$this->con->fecha ();
+		return $result;
 	}
 	/* Artistas mais populares */
 	function s4() {
