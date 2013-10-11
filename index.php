@@ -62,7 +62,7 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 			<option value=1>1: Média e Desvio Padrão dos ratings para artistas musicais</option>
 			<option value=2>2: 20 artistas com o maior rating médio</option>
 			<option value=3>3: 20 artistas com o maior rating médio curtidos por pelo menos duas pessoas</option>
-			<option value=4>4</option>
+			<option value=4>4: 10 artistas musicais mais populares</option>
 			<option value=5>5</option>
 			<option value=6>6</option>
 			<option value=7>7</option>

@@ -47,12 +47,15 @@ switch ($i) {
 		echo '</table>';
 		break;	
 	case 4 :
+		echo '<table>';
+		echo '<tr align="left"><th>#</th><th>Artista</th><th>Likes</th></tr>';
 		$res = $stat->s4 ();
 		for($i = 0; $i < 10; $i ++) {
-			echo $res [$i] ['Nome'];
+			$pos = $i+1;
+			echo "<tr><td>{$pos}</td><td>{$res[$i]['Nome']}</td><td>{$res[$i]['Curtidas']}</td></tr>";
 		}
-		break;
-	
+		echo '</table>';
+		break;		
 	case 5 :
 		$res = $stat->s5 ();
 		for($i = 0; $i < 10; $i ++) {
