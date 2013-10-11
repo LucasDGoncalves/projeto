@@ -60,16 +60,20 @@ switch ($i) {
 	case 8 :
 		$res = $stat->s9 ();
 		$quart = new Stat ();
-		echo "quartile(25th, 50th, 75th percentile) = " . implode ( ",	", $quart->quartiles ( $res ) ) . "<br />";
+		echo "Popularidade(1º,2º,3º quartis) = " . implode ( ",	", $quart->quartiles ( $res ) ) . "<br />";
 		break;
 	case 9 :
 		/*gráfico*/
+		echo "Distribuição de Exponencial";
 		break;
 	case 10 :
 		/*gráfico*/
 		break;
 	case 11 :
 		/*gráfico*/
+		break;
+	case 12 :
+		/*gráfico popularidade dos gêneros*/
 		break;
 }
 $res = $stat->s9 ();
@@ -86,13 +90,15 @@ $myPicture = new pImage(700,230,$myData);
 /* Define the boundaries of the graph area */
 $myPicture->setGraphArea(60,40,670,190);
 
+$myPicture->setFontProperties("Fonts/tahoma.ttf",8);
+
 /* Draw the scale, keep everything automatic */
-$myPicture->drawScale();
+$myPicture->drawScale(array("LabelSkip"=>40));
 
 /* Draw the scale, keep everything automatic */
 $myPicture->drawSplineChart();
 
-/* Build the PNG file and send it to the web browser */
-$myPicture->Stroke();
-
+$myPicture->drawLineChart();
+header("Content-Type: image/png");
+$myPicture->Render(null);
 ?>

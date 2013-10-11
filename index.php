@@ -58,6 +58,19 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 	echo "<div id='tabs-3' style='height:88%'>";
 	echo "<div id='conteudo-4' style='float:left; widht:50%'> Selecione a estatística desejada</div>
 			<select><option value=1>1</option></select>
+			<select><option value=1>2</option></select>
+			<select><option value=1>3</option></select>
+			<select><option value=1>4</option></select>
+			<select><option value=1>5</option></select>
+			<select><option value=1>6</option></select>
+			<select><option value=1>7</option></select>
+			<select><option value=1>8</option></select>
+			<select><option value=1>9</option></select>
+			<select><option value=1>10</option></select>
+			<select><option value=1>11</option></select>
+			<select><option value=1>12</option></select>
+			<select><option value=1>13</option></select>
+			<select><option value=1>14</option></select>
 			<div id='conteudo-5' style='float:right; margin-right:100'></div>
 		</div>";
 	

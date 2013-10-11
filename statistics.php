@@ -176,5 +176,22 @@ class statistics {
 		$this->con->fecha ();
 		return $result;
 	}
+	
+	/* Genero por popularidade para gráfico */
+	function s12() {
+		// cria cconecta ao banco
+		$this->con->conecta ();
+		$query = "SELECT  genero.descricao as Genero, count(*) as Count
+					FROM artista_genero, genero
+					where genero.id = artista_genero.id_genero
+					group by genero.id
+					order by count(*) desc";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+			$result [] = $rs['count(*)'];
+		}
+		$this->con->fecha ();
+		return $result;
+	}
 }
 ?>
