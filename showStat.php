@@ -18,10 +18,16 @@ switch ($i) {
 	
 	case 2 :
 		$res = $stat->s2 ();
-		for($i = 0; $i < 20; $i ++) {
-			echo $res[$i]['Nome'].'<br>';
+		echo '<table>';
+		echo '<tr><th>Pos.</th><th>Artista</th> <th>Pos.</th><th>Artista</th></tr>';
+		for($i = 0; $i < 10; $i++) {
+			$pos = $i+1;
+			echo "<tr><td>{$pos}</td><td>{$res[$i]['Nome']}</td>";
+			$pos = $pos+10;
+			$i2 = $pos-1;
+			echo "<td>{$pos}</td><td>{$res[$i2]['Nome']}</td></tr>";
 		}
-		
+		echo '</table>';
 		break;
 	case 3 :
 		$res = $stat->s3 ();

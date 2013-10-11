@@ -59,8 +59,8 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 	echo "<div id='conteudo-4' style='float:left; widht:50%'></div>
 			<select id='showStat'>
 			<option selected='selected'> Selecione a estatística desejada </option> 
-			<option value=1>1</option>
-			<option value=2>2</option>
+			<option value=1>1: Média e Desvio Padrão dos ratings para artistas musicais</option>
+			<option value=2>2: 20 artistas com o maior rating médio</option>
 			<option value=3>3</option>
 			<option value=4>4</option>
 			<option value=5>5</option>
