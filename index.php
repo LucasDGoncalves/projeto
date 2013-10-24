@@ -65,14 +65,13 @@ if (isset ( $_SESSION ['logado'] ) && $_SESSION ['logado']) {
 			<option value=4>4: 10 artistas musicais mais populares</option>
 			<option value=5>5: 10 artistas com o maior variabilidade de ratings</option>
 			<option value=6>6: 5 gêneros musicais mais populares</option>
-			<option value=7>7</option>
-			<option value=8>8</option>
-			<option value=9>9</option>
-			<option value=10>10</option>
-			<option value=11>11</option>
-			<option value=12>12</option>
-			<option value=13>13</option>
-			<option value=14>14</option></select>
+			<option value=7>7: 10 conhecidos que compartilham o maior numero de artistas curtidos</option>
+			<option value=8>8: Valores de popularidade de artistas para o 1º, 2º e 3º quartis</option>
+			<option value=9>9: Gráfico que da popularidade dos artistas</option>
+			<option value=10>10: Número de pessoas que curtiram exatamente x artistas</option>
+			<option value=11>11: Número de artistas curtidos por exatamente x pessoas</option>
+			<option value=12>12: Grafico de popularidade dos gêneros </option>
+			</select>
 			<div id='conteudo-5' style='float:right; margin-right:100'></div>
 		</div>";
 	

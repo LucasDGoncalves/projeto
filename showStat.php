@@ -9,7 +9,7 @@ include ("pScatter.class.php");
 $stat = new statistics ();
 $i = $_POST ['func'];
 
-switch (10) {
+switch ($i) {
 	// List artist
 	case 1 :
 		$res = $stat->s1 ();
@@ -80,227 +80,242 @@ switch (10) {
 		break;
 	case 7 :
 		$res = $stat->s7 ();
-		for($i = 0; $i < 5; $i ++) {
-			echo $res [$i] ['conhecedor'];
-			echo $res [$i] ['conhecido'];
+		echo '<table>';
+		echo '<tr align="left"><th>#</th><th>Amigos</th><th>qtd. Artistas</th></tr>';
+		for($i = 0; $i < 10; $i ++) {
+			$pos = $i+1;
+			echo "<tr><td>{$pos}</td><td>".$res[$i]['conhecedor'] ." e ".$res[$i]['conhecido']."</td><td>{$res[$i]['sum']}</td></tr>";
 		}
+		echo '</table>';
 		break;
-	
+
 	case 8 :
 		$res = $stat->s9 ();
 		$quart = new Stat ();
 		echo "Popularidade(1º,2º,3º quartis) = " . implode ( ",	", $quart->quartiles ( $res ) ) . "<br />";
 		break;
 	case 9 :
-		$res = $stat->s9 ();
 		
-		/* Create your dataset object */
-		$myData = new pData ();
+		echo "<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=9' target='_blank'>Clique aqui para ver o gráfico</a>";
 		
-		/* Add data in your dataset */
-		$myData->addPoints ( $res);
+// 		$res = $stat->s9 ();
+		
+// 		/* Create your dataset object */
+// 		$myData = new pData ();
+		
+// 		/* Add data in your dataset */
+// 		$myData->addPoints ( $res);
 		
 		
-		/* Create a pChart object and associate your dataset */
-		$myPicture = new pImage ( 700, 230, $myData );
+// 		/* Create a pChart object and associate your dataset */
+// 		$myPicture = new pImage ( 700, 230, $myData );
 		
-		/* Define the boundaries of the graph area */
-		$myPicture->setGraphArea ( 60, 40, 670, 190 );
+// 		/* Define the boundaries of the graph area */
+// 		$myPicture->setGraphArea ( 60, 40, 670, 190 );
 		
-		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
+// 		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
 		
-		/* Draw the scale, keep everything automatic */
-		$myPicture->drawScale ( array (
-				"LabelSkip" => 40 
-		) );
+// 		/* Draw the scale, keep everything automatic */
+// 		$myPicture->drawScale ( array (
+// 				"LabelSkip" => 40 
+// 		) );
 		
-		/* Draw the scale, keep everything automatic */
-		$myPicture->drawSplineChart ();
+// 		/* Draw the scale, keep everything automatic */
+// 		$myPicture->drawSplineChart ();
 		
-		$myPicture->drawLineChart ();
-		header ( "Content-Type: image/png" );
-		$myPicture->Render ( null );
-		echo "Distribuição Exponencial";
-		break;
+// 		$myPicture->drawLineChart ();
+// 		header ( "Content-Type: image/png" );
+// 		$myPicture->Render ( null );
+// 		echo "Distribuição Exponencial";
+ 		break;
 	case 10 :
-		$res = $stat->s10 ();
 		
-		/* Create the pData object */
-		$myData = new pData ();
+		echo "<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=10' target='_blank'>Clique aqui para ver o gráfico</a>";
 		
-		/* Create the X axis and the binded series */
-		$myData->addPoints ( $res ['qtd'], "Probe 1" );
-		$myData->setAxisXY ( 0, AXIS_X );
-		$myData->setAxisPosition ( 0, AXIS_POSITION_BOTTOM );
-		$myData->setAxisName(0,"Artistas Curtidos");
+// 		$res = $stat->s10 ();
 		
+// 		/* Create the pData object */
+// 		$myData = new pData ();
 		
-		/* Create the Y axis and the binded series */
-		$myData->addPoints ( $res ['amount'], "Probe 2" );
-		$myData->setSerieOnAxis ( "Probe 2", 1 );
-		$myData->setAxisXY ( 1, AXIS_Y );
-		$myData->setAxisName(1,"Nº de Pessoas");
+// 		/* Create the X axis and the binded series */
+// 		$myData->addPoints ( $res ['qtd'], "Probe 1" );
+// 		$myData->setAxisXY ( 0, AXIS_X );
+// 		$myData->setAxisPosition ( 0, AXIS_POSITION_BOTTOM );
+// 		$myData->setAxisName(0,"Artistas Curtidos");
 		
 		
-		/* Create the 2nd scatter chart binding */
-		$myData->setScatterSerie ( "Probe 1", "Probe 2", 1 );
-		$myData->setScatterSerieDescription(0,"This year");
+// 		/* Create the Y axis and the binded series */
+// 		$myData->addPoints ( $res ['amount'], "Probe 2" );
+// 		$myData->setSerieOnAxis ( "Probe 2", 1 );
+// 		$myData->setAxisXY ( 1, AXIS_Y );
+// 		$myData->setAxisName(1,"Nº de Pessoas");
 		
-		/* Create the pChart object */
-		$myPicture = new pImage ( 400, 400, $myData );
 		
-		/* Write the picture title */
-		$myPicture->setFontProperties ( "Silkscreen.ttf", 6 );
-		$myPicture->drawText ( 10, 13, "drawScatterLineChart() - Draw a scatter line chart", array (
-				"R" => 255,
-				"G" => 255,
-				"B" => 255 
-		) );
+// 		/* Create the 2nd scatter chart binding */
+// 		$myData->setScatterSerie ( "Probe 1", "Probe 2", 1 );
+// 		$myData->setScatterSerieDescription(0,"This year");
 		
-		/* Add a border to the picture */
-		$myPicture->drawRectangle ( 0, 0, 399, 399, array (
-				"R" => 0,
-				"G" => 0,
-				"B" => 0 
-		) );
+// 		/* Create the pChart object */
+// 		$myPicture = new pImage ( 400, 400, $myData );
 		
-		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
+// 		/* Write the picture title */
+// 		$myPicture->setFontProperties ( "Silkscreen.ttf", 6 );
+// 		$myPicture->drawText ( 10, 13, "drawScatterLineChart() - Draw a scatter line chart", array (
+// 				"R" => 255,
+// 				"G" => 255,
+// 				"B" => 255 
+// 		) );
 		
-		/* Set the graph area */
-		$myPicture->setGraphArea ( 50, 50, 350, 350 );
+// 		/* Add a border to the picture */
+// 		$myPicture->drawRectangle ( 0, 0, 399, 399, array (
+// 				"R" => 0,
+// 				"G" => 0,
+// 				"B" => 0 
+// 		) );
 		
-		/* Create the Scatter chart object */
-		$myScatter = new pScatter ( $myPicture, $myData );
+// 		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
 		
-		/* Draw the scale */
-		$myScatter->drawScatterScale ();
+// 		/* Set the graph area */
+// 		$myPicture->setGraphArea ( 50, 50, 350, 350 );
 		
-		/* Turn on shadow computing */
-		$myPicture->setShadow ( TRUE, array (
-				"X" => 1,
-				"Y" => 1,
-				"R" => 0,
-				"G" => 0,
-				"B" => 0,
-				"Alpha" => 10 
-		) );
+// 		/* Create the Scatter chart object */
+// 		$myScatter = new pScatter ( $myPicture, $myData );
 		
-		/* Draw a scatter plot chart */
-		$myScatter->drawScatterLineChart ();
+// 		/* Draw the scale */
+// 		$myScatter->drawScatterScale ();
 		
-		/* Draw the legend */
-		$myScatter->drawScatterLegend ( 280, 380, array (
-				"Mode" => LEGEND_HORIZONTAL,
-				"Style" => LEGEND_NOBORDER 
-		) );
+// 		/* Turn on shadow computing */
+// 		$myPicture->setShadow ( TRUE, array (
+// 				"X" => 1,
+// 				"Y" => 1,
+// 				"R" => 0,
+// 				"G" => 0,
+// 				"B" => 0,
+// 				"Alpha" => 10 
+// 		) );
 		
-		/* Render the picture (choose the best way) */
-		$myPicture->autoOutput ( "pictures/example.drawScatterLineChart.png" );
-		echo "Distribuição Gaussiana";
+// 		/* Draw a scatter plot chart */
+// 		$myScatter->drawScatterLineChart ();
+		
+// 		/* Draw the legend */
+// 		$myScatter->drawScatterLegend ( 280, 380, array (
+// 				"Mode" => LEGEND_HORIZONTAL,
+// 				"Style" => LEGEND_NOBORDER 
+// 		) );
+		
+// 		/* Render the picture (choose the best way) */
+// 		$myPicture->autoOutput ( "pictures/example.drawScatterLineChart.png" );
+// 		echo "Distribuição Gaussiana";
 		break;
 	case 11 :
-		$res = $stat->s11 ();
 		
-		/* Create the pData object */
-		$myData = new pData ();
+		echo "<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=11' target='_blank'>Clique aqui para ver o gráfico</a>";
 		
-		/* Create the X axis and the binded series */
-		$myData->addPoints ( $res ['qtd'], "Probe 1" );
-		$myData->setAxisXY ( 0, AXIS_X );
-		$myData->setAxisPosition ( 0, AXIS_POSITION_BOTTOM );
-		$myData->setAxisName(0,"Curtidas");
+// 		$res = $stat->s11 ();
 		
-		/* Create the Y axis and the binded series */
-		$myData->addPoints ( $res ['amount'], "Probe 2" );
-		$myData->setAxisXY ( 1, AXIS_Y );
-		$myData->setSerieOnAxis ( "Probe 2", 1 );
-		$myData->setAxisName(1,"Nº de Artistas");
+// 		/* Create the pData object */
+// 		$myData = new pData ();
 		
-		/* Create the 2nd scatter chart binding */
-		$myData->setScatterSerie ( "Probe 1", "Probe 2", 1 );
+// 		/* Create the X axis and the binded series */
+// 		$myData->addPoints ( $res ['qtd'], "Probe 1" );
+// 		$myData->setAxisXY ( 0, AXIS_X );
+// 		$myData->setAxisPosition ( 0, AXIS_POSITION_BOTTOM );
+// 		$myData->setAxisName(0,"Curtidas");
 		
-		/* Create the pChart object */
-		$myPicture = new pImage ( 400, 400, $myData );
+// 		/* Create the Y axis and the binded series */
+// 		$myData->addPoints ( $res ['amount'], "Probe 2" );
+// 		$myData->setAxisXY ( 1, AXIS_Y );
+// 		$myData->setSerieOnAxis ( "Probe 2", 1 );
+// 		$myData->setAxisName(1,"Nº de Artistas");
 		
-		/* Write the picture title */
-		$myPicture->setFontProperties ( "Silkscreen.ttf", 6 );
-		$myPicture->drawText ( 10, 13, "drawScatterLineChart() - Draw a scatter line chart", array (
-				"R" => 255,
-				"G" => 255,
-				"B" => 255 
-		) );
+// 		/* Create the 2nd scatter chart binding */
+// 		$myData->setScatterSerie ( "Probe 1", "Probe 2", 1 );
 		
-		/* Add a border to the picture */
-		$myPicture->drawRectangle ( 0, 0, 399, 399, array (
-				"R" => 0,
-				"G" => 0,
-				"B" => 0 
-		) );
+// 		/* Create the pChart object */
+// 		$myPicture = new pImage ( 400, 400, $myData );
 		
-		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
+// 		/* Write the picture title */
+// 		$myPicture->setFontProperties ( "Silkscreen.ttf", 6 );
+// 		$myPicture->drawText ( 10, 13, "drawScatterLineChart() - Draw a scatter line chart", array (
+// 				"R" => 255,
+// 				"G" => 255,
+// 				"B" => 255 
+// 		) );
 		
-		/* Set the graph area */
-		$myPicture->setGraphArea ( 50, 50, 350, 350 );
+// 		/* Add a border to the picture */
+// 		$myPicture->drawRectangle ( 0, 0, 399, 399, array (
+// 				"R" => 0,
+// 				"G" => 0,
+// 				"B" => 0 
+// 		) );
 		
-		/* Create the Scatter chart object */
-		$myScatter = new pScatter ( $myPicture, $myData );
+// 		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
 		
-		/* Draw the scale */
-		$myScatter->drawScatterScale ();
+// 		/* Set the graph area */
+// 		$myPicture->setGraphArea ( 50, 50, 350, 350 );
 		
-		/* Turn on shadow computing */
-		$myPicture->setShadow ( TRUE, array (
-				"X" => 1,
-				"Y" => 1,
-				"R" => 0,
-				"G" => 0,
-				"B" => 0,
-				"Alpha" => 10 
-		) );
+// 		/* Create the Scatter chart object */
+// 		$myScatter = new pScatter ( $myPicture, $myData );
 		
-		/* Draw a scatter plot chart */
-		$myScatter->drawScatterLineChart ();
+// 		/* Draw the scale */
+// 		$myScatter->drawScatterScale ();
 		
-		/* Draw the legend */
-		$myScatter->drawScatterLegend ( 280, 380, array (
-				"Mode" => LEGEND_HORIZONTAL,
-				"Style" => LEGEND_NOBORDER 
-		) );
+// 		/* Turn on shadow computing */
+// 		$myPicture->setShadow ( TRUE, array (
+// 				"X" => 1,
+// 				"Y" => 1,
+// 				"R" => 0,
+// 				"G" => 0,
+// 				"B" => 0,
+// 				"Alpha" => 10 
+// 		) );
 		
-		/* Render the picture (choose the best way) */
-		$myPicture->autoOutput ( "pictures/example.drawScatterLineChart.png" );
-		echo "Distribuição Exponencial";
+// 		/* Draw a scatter plot chart */
+// 		$myScatter->drawScatterLineChart ();
+		
+// 		/* Draw the legend */
+// 		$myScatter->drawScatterLegend ( 280, 380, array (
+// 				"Mode" => LEGEND_HORIZONTAL,
+// 				"Style" => LEGEND_NOBORDER 
+// 		) );
+		
+// 		/* Render the picture (choose the best way) */
+// 		$myPicture->autoOutput ( "pictures/example.drawScatterLineChart.png" );
+// 		echo "Distribuição Exponencial";
 		break;
 	
 	case 12 :
-		$res = $stat->s12 ();
 		
-		/* Create your dataset object */
-		$myData = new pData ();
+		echo "<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=12' target='_blank'>Clique aqui para ver o gráfico</a>";
 		
-		/* Add data in your dataset */
-		$myData->addPoints ( $res );
+// 		$res = $stat->s12 ();
 		
-		/* Create a pChart object and associate your dataset */
-		$myPicture = new pImage ( 700, 230, $myData );
+// 		/* Create your dataset object */
+// 		$myData = new pData ();
 		
-		/* Define the boundaries of the graph area */
-		$myPicture->setGraphArea ( 60, 40, 670, 190 );
+// 		/* Add data in your dataset */
+// 		$myData->addPoints ( $res );
 		
-		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
+// 		/* Create a pChart object and associate your dataset */
+// 		$myPicture = new pImage ( 700, 230, $myData );
 		
-		/* Draw the scale, keep everything automatic */
-		$myPicture->drawScale ( array (
-				"LabelSkip" => 40 
-		) );
+// 		/* Define the boundaries of the graph area */
+// 		$myPicture->setGraphArea ( 60, 40, 670, 190 );
 		
-		/* Draw the scale, keep everything automatic */
-		$myPicture->drawSplineChart ();
+// 		$myPicture->setFontProperties ( "Fonts/tahoma.ttf", 8 );
 		
-		$myPicture->drawLineChart ();
-		header ( "Content-Type: image/png" );
-		$myPicture->Render ( null );
-		echo "Distribuição Exponencial";
+// 		/* Draw the scale, keep everything automatic */
+// 		$myPicture->drawScale ( array (
+// 				"LabelSkip" => 40 
+// 		) );
+		
+// 		/* Draw the scale, keep everything automatic */
+// 		$myPicture->drawSplineChart ();
+		
+// 		$myPicture->drawLineChart ();
+// 		header ( "Content-Type: image/png" );
+// 		$myPicture->Render ( null );
+// 		echo "Distribuição Exponencial";
 		break;
 }
 
