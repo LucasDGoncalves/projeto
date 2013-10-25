@@ -13,45 +13,45 @@ class querys {
 		// XMLs fonte para inserção de dados no banco
 		$xml ['Person'] = 'http://www.ic.unicamp.br/~santanch/teaching/db/xml/person-20130906-0808.xml';
 		$xml ['Knows'] = 'http://www.ic.unicamp.br/~santanch/teaching/db/xml/knows-20130906-0835.xml';
- 		$xml ['LikesMusic'] = 'http://www.ic.unicamp.br/~santanch/teaching/db/xml/likesMusic-20130906-0852.xml';
+		$xml ['LikesMusic'] = 'http://www.ic.unicamp.br/~santanch/teaching/db/xml/likesMusic-20130906-0852.xml';
 		
-// 		// XML de Pessoas
-// 		// carrega o xml
-// 		if (! $loaded = simplexml_load_file ( $xml ['Person'] )) {
-// 			// caso nao consiga abrir exibe mensagem de erro
-// 			die ( 'unable to load Person XML file' );
-// 		} else {
-// 			// itera em cada registro de pessoa no XML
-// 			foreach ( $loaded->Person as $element ) {
-// 				// conversão do nome da cidade, estava ficando com caracteres quebrados
-// 				$cidade = utf8_decode ( $element->attributes ()->hometown );
-// 				// cria a query de inserção
-// 				$query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$element->attributes()->uri}', '{$element->attributes()->name}', '{$cidade}')";
-				
-// 				// executa a query ou falha e exibe a mensagem de erro do MySQL
-// 				$res = mysql_query ( $query ) or die ( "Person - " . mysql_error () );
-// 			}
-// 		}
+		// // XML de Pessoas
+		// // carrega o xml
+		// if (! $loaded = simplexml_load_file ( $xml ['Person'] )) {
+		// // caso nao consiga abrir exibe mensagem de erro
+		// die ( 'unable to load Person XML file' );
+		// } else {
+		// // itera em cada registro de pessoa no XML
+		// foreach ( $loaded->Person as $element ) {
+		// // conversão do nome da cidade, estava ficando com caracteres quebrados
+		// $cidade = utf8_decode ( $element->attributes ()->hometown );
+		// // cria a query de inserção
+		// $query = "INSERT into pessoa (login, nome, cidade_natal) VALUES ('{$element->attributes()->uri}', '{$element->attributes()->name}', '{$cidade}')";
 		
-// 		echo "Pessoas inseridas com sucesso! <br/><br/>";
+		// // executa a query ou falha e exibe a mensagem de erro do MySQL
+		// $res = mysql_query ( $query ) or die ( "Person - " . mysql_error () );
+		// }
+		// }
 		
-// 		// XML de Knows
-// 		// carrega o xml
-// 		if (! $loaded = simplexml_load_file ( $xml ['Knows'] )) {
-// 			// caso nao consiga abrir exibe mensagem de erro
-// 			die ( 'unable to load Knows XML file' );
-// 		} else {
-// 			// itera em cada registro de knows no XML
-// 			foreach ( $loaded->Knows as $element ) {
-// 				// cria a query de inserção
-// 				$query = "INSERT into conhecimento (conhecedor, conhecido) VALUES ('{$element->attributes()->person}', '{$element->attributes()->colleague}')";
-				
-// 				// executa a query ou falha e exibe a mensagem de erro do MySQL
-// 				$res = mysql_query ( $query ) or die ( "Knows - " . mysql_error () );
-// 			}
-// 		}
+		// echo "Pessoas inseridas com sucesso! <br/><br/>";
 		
-// 		echo "Knows inseridas com sucesso! <br/><br/>";
+		// // XML de Knows
+		// // carrega o xml
+		// if (! $loaded = simplexml_load_file ( $xml ['Knows'] )) {
+		// // caso nao consiga abrir exibe mensagem de erro
+		// die ( 'unable to load Knows XML file' );
+		// } else {
+		// // itera em cada registro de knows no XML
+		// foreach ( $loaded->Knows as $element ) {
+		// // cria a query de inserção
+		// $query = "INSERT into conhecimento (conhecedor, conhecido) VALUES ('{$element->attributes()->person}', '{$element->attributes()->colleague}')";
+		
+		// // executa a query ou falha e exibe a mensagem de erro do MySQL
+		// $res = mysql_query ( $query ) or die ( "Knows - " . mysql_error () );
+		// }
+		// }
+		
+		// echo "Knows inseridas com sucesso! <br/><br/>";
 		
 		// XML de LikesMusic
 		// carrega o xml
@@ -91,7 +91,7 @@ class querys {
 				// como a inserção de artistas no array e no banco foi feita na mesma ordem o id é o mesmo que seria caso tivesse sido deixado para o MySQL gerar no auto_increment
 				$id_banda = $array_artistas ["{$like->attributes()->bandUri}"];
 				// monta a query de inserção de like
-				$person = str_replace('http://www.ic.unicamp.br/MC536/2013/2/', '', $like->attributes()->person);
+				$person = str_replace ( 'http://www.ic.unicamp.br/MC536/2013/2/', '', $like->attributes ()->person );
 				$query2 = "INSERT into curtida (login, id_artista, nota) VALUES ('{$person}', {$id_banda}, '{$like->attributes()->rating}')";
 				
 				// executa a query ou falha e exibe a mensagem de erro do MySQL
@@ -453,7 +453,6 @@ class querys {
 		return $rs ['id'];
 	}
 	
-
 	// Rotina para atualizar todos os artistas
 	function updateArtists() {
 		$fb = new DataMining ();
@@ -463,16 +462,16 @@ class querys {
 			
 			if (isset ( $r ['name'] )) {
 				$this->updateArtist ( $artist ['id'], mysql_real_escape_string ( $r ['name'] ), $r ['placeformed'] );
-// 				foreach ( $r ['similar'] ['artist'] as $similar ) {
-// 					$similar_id = $this->addSimilar ( mysql_real_escape_string ( $similar ['name'] ) );
-// 					$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
-// 					$res = mysql_query ( $query ) or die ( mysql_error () );
-// 					if (mysql_num_rows ( $res ) == 0) {
-// 						$query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
-// 						mysql_query ( $query ) or die ( mysql_error () );
-// 					}
-// 				}
-
+				foreach ( $r ['similar'] ['artist'] as $similar ) {
+					$similar_id = $this->addSimilar ( mysql_real_escape_string ( $similar ['name'] ) );
+					$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
+					$res = mysql_query ( $query ) or die ( mysql_error () );
+					if (mysql_num_rows ( $res ) == 0) {
+						$query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
+						mysql_query ( $query ) or die ( mysql_error () );
+					}
+				}
+				
 				$r = $fb->searchFreeBaseGenre ( $r ['name'] );
 				foreach ( $r ['genre'] as $genre ) {
 					$genre_id = $this->addGenero ( $genre );
@@ -487,5 +486,41 @@ class querys {
 			}
 		}
 	}
+	
+	// Rotina para inserir novo artista
+	function addNewArtist($artist_name) {
+		$fb = new DataMining ();
+		$artist ['id'] = $this->addArtist ( $artist_name );
+		$artist ['name'] = $artist_name;
+		$r = $fb->searchLastFMArtist ( $artist ['name'] );
+		
+		if (isset ( $r ['name'] )) {
+			$this->updateArtist ( $artist ['id'], mysql_real_escape_string ( $r ['name'] ), $r ['placeformed'] );
+			foreach ( $r ['similar'] ['artist'] as $similar ) {
+				$similar_id = $this->addSimilar ( mysql_real_escape_string ( $similar ['name'] ) );
+				$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
+				$res = mysql_query ( $query ) or die ( mysql_error () );
+				if (mysql_num_rows ( $res ) == 0) {
+					$query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
+					mysql_query ( $query ) or die ( mysql_error () );
+				}
+			}
+		}
+		
+		$r = $fb->searchFreeBaseGenre ( $r ['name'] );
+		foreach ( $r ['genre'] as $genre ) {
+			$genre_id = $this->addGenero ( $genre );
+			$query = "SELECT * FROM artista_genero WHERE id_artista = {$artist['id']} and id_genero = {$genre_id}";
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			if (mysql_num_rows ( $res ) == 0) {
+				$query = "INSERT INTO artista_genero (id_artista,id_genero) VALUES ({$artist['id']},{$genre_id}) ";
+				mysql_query ( $query ) or die ( mysql_error () );
+			}
+		}
+	}
 }
+
+$a = new querys ();
+$a->addNewArtist ( "Bee Gees" );
 ?>
