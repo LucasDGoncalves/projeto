@@ -520,7 +520,6 @@ class querys {
 		}
 	}
 }
-
-$a = new querys ();
-$a->addNewArtist ( "Bee Gees" );
+$r = new querys();
+$r->updateArtists();
 ?>

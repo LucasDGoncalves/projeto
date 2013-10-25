@@ -9,18 +9,18 @@ class recomendations {
 		// cria cconecta ao banco
 		$this->con->conecta ();
 		
-		$query = "select artista_genero.id_genero as genre from pessoa 
+		$query = "select artista_genero.id_genero as genre, count(*) as count from pessoa 
 				join curtida on pessoa.login = curtida.login
 				join artista on curtida.id_artista = artista.id
 				join artista_genero on artista.id = artista_genero.id_artista
 				join genero on artista_genero.id_genero = genero.id
 				where pessoa.login like '{$login}'
 				group by genero.id
-				order by count(*) desc
+				order by count desc
 				limit 5";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			$result1 [] = $rs ['genre'];
+			$result1 [] = $rs;
 		}
 		
 		$result1 = implode(", " , $result1);
