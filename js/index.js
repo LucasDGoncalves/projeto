@@ -129,6 +129,20 @@ $(document).ready(
 				});
 
 			};
+			
+			getSuggestions = function(login) {
+				$("#suggestions").show();
+				params = new Object();
+				params.login = login;
+				$.ajax({
+					type : 'POST',
+					url : "suggestions.php",
+					data : params
+				}).done(function(msg) {
+					$("#suggestions").html(msg);
+				});
+
+			};
 
 			$('#conteudo-2').delegate('#button_cancel', 'click', function() {
 				// trocar botoes sendo mostrados

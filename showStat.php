@@ -96,7 +96,8 @@ switch ($i) {
 		break;
 	case 9 :
 		
-		echo "<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=9' target='_blank'>Clique aqui para ver o gráfico</a>";
+		echo "Gráfico com Distribuição Exponencial<br>
+				<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=9' target='_blank'>Clique aqui para ver o gráfico</a>";
 		
 // 		$res = $stat->s9 ();
 		
@@ -130,7 +131,8 @@ switch ($i) {
  		break;
 	case 10 :
 		
-		echo "<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=10' target='_blank'>Clique aqui para ver o gráfico</a>";
+		echo "Gráfico com Distribuição Gaussiana<br>
+				<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=10' target='_blank'>Clique aqui para ver o gráfico</a>";
 		
 // 		$res = $stat->s10 ();
 		
@@ -209,7 +211,8 @@ switch ($i) {
 		break;
 	case 11 :
 		
-		echo "<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=11' target='_blank'>Clique aqui para ver o gráfico</a>";
+		echo "Gráfico com Distribuição Exponencial<br>
+				<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=11' target='_blank'>Clique aqui para ver o gráfico</a>";
 		
 // 		$res = $stat->s11 ();
 		
@@ -286,7 +289,8 @@ switch ($i) {
 	
 	case 12 :
 		
-		echo "<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=12' target='_blank'>Clique aqui para ver o gráfico</a>";
+		echo "Gráfico com Distribuição Exponencial<br>
+				<a href='http://www.socialbook.orgfree.com/getShowStat.php?func=12' target='_blank'>Clique aqui para ver o gráfico</a>";
 		
 // 		$res = $stat->s12 ();
 		
