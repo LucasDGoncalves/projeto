@@ -63,7 +63,7 @@ class recomendations {
 		// cria cconecta ao banco
 		$this->con->conecta ();
 	
-		$query = "select artista.nome_artistico, (sum(curtida.nota)/5) as peso, count(*) from conhecimento
+		$query = "select artista.nome_artistico, (sum(curtida.nota)/5) as peso, count(*) as count from conhecimento
 				join curtida on curtida.login = conhecimento.conhecido
 				join artista on curtida.id_artista = artista.id
 				where conhecimento.conhecedor = '{$login}'
