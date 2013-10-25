@@ -363,34 +363,17 @@ class querys {
 		$result = $fb->getLocationInfo ( $city );
 		$this->con->conecta ();
 		
-		$query = "SELECT * FROM cidade WHERE nome like '{$result['city']}'";
+		$city = mysql_real_escape_string ( $result ['city'] );
+		$query = "SELECT * FROM cidade WHERE nome like '{$city}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
+		if (! isset ( $result ['country'] ))
+			$result ['country'] = null;
 		
 		if (mysql_num_rows ( $res ) == 0) {
-			$query = "INSERT INTO cidade (nome,id_estado) VALUES ('{$result['city']}',{$this->addState($result['state'])}) ";
+			$query = "INSERT INTO cidade (nome,id_pais) VALUES ('{$result['city']}',{$this->addCounty($result['country'])}) ";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 			
-			$query = "SELECT * FROM cidade WHERE nome like '{$result['city']}'";
-			$res = mysql_query ( $query ) or die ( mysql_error () );
-		}
-		$rs = mysql_fetch_assoc ( $res );
-		return $rs ['id'];
-	}
-	
-	// Se estado existe retorna id da cidade, se não insere e retorna o id
-	function addState($state) {
-		$fb = new DataMining ();
-		$result = $fb->getLocationInfo ( $state );
-		$this->con->conecta ();
-		
-		$query = "SELECT * FROM estado WHERE nome like '{$result['state']}'";
-		$res = mysql_query ( $query ) or die ( mysql_error () );
-		
-		if (mysql_num_rows ( $res ) == 0) {
-			$query = "INSERT INTO estado (nome,id_pais) VALUES ('{$result['state']}',{$this->addCountry($result['country'])}) ";
-			$res = mysql_query ( $query ) or die ( mysql_error () );
-			
-			$query = "SELECT * FROM estado WHERE nome like '{$result['state']}'";
+			$query = "SELECT * FROM cidade WHERE nome like '{$city}'";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 		}
 		$rs = mysql_fetch_assoc ( $res );
@@ -415,6 +398,19 @@ class querys {
 		}
 		$rs = mysql_fetch_assoc ( $res );
 		return $rs ['id'];
+	}
+	
+	// Se pais existe retorna id do pais, se não insere e retorna o id
+	function upDateLocale() {
+		$this->con->conecta ();
+		
+		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+			// Pega primeiro elemento da string
+			
+			// insere cidade
+			
+			//insere id no artista
+		}
 	}
 	
 	// Adiciona gênero, se não existir, retorna o id
@@ -461,17 +457,18 @@ class querys {
 			$r = $fb->searchLastFMArtist ( $artist ['name'] );
 			
 			if (isset ( $r ['name'] )) {
-				$this->updateArtist ( $artist ['id'], mysql_real_escape_string ( $r ['name'] ), $r ['placeformed'] );
+				$this->updateArtist ( $artist ['id'], mysql_real_escape_string ( $r ['name'] ), mysql_real_escape_string ( $r ['placeformed'] ) );
 				foreach ( $r ['similar'] ['artist'] as $similar ) {
 					$similar_id = $this->addSimilar ( mysql_real_escape_string ( $similar ['name'] ) );
-					$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
-					$res = mysql_query ( $query ) or die ( mysql_error () );
-					if (mysql_num_rows ( $res ) == 0) {
-						$query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
-						mysql_query ( $query ) or die ( mysql_error () );
+					if (isset ( $similar_id )) {
+						$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
+						$res = mysql_query ( $query ) or die ( mysql_error () );
+						if (mysql_num_rows ( $res ) == 0) {
+							$query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
+							mysql_query ( $query ) or die ( mysql_error () );
+						}
 					}
 				}
-				
 				$r = $fb->searchFreeBaseGenre ( $r ['name'] );
 				foreach ( $r ['genre'] as $genre ) {
 					$genre_id = $this->addGenero ( $genre );
@@ -498,11 +495,13 @@ class querys {
 			$this->updateArtist ( $artist ['id'], mysql_real_escape_string ( $r ['name'] ), mysql_real_escape_string ( $r ['placeformed'] ) );
 			foreach ( $r ['similar'] ['artist'] as $similar ) {
 				$similar_id = $this->addSimilar ( mysql_real_escape_string ( $similar ['name'] ) );
-				$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
-				$res = mysql_query ( $query ) or die ( mysql_error () );
-				if (mysql_num_rows ( $res ) == 0) {
-					$query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
-					mysql_query ( $query ) or die ( mysql_error () );
+				if (isset ( $similar_id )) {
+					$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
+					$res = mysql_query ( $query ) or die ( mysql_error () );
+					if (mysql_num_rows ( $res ) == 0) {
+						$query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
+						mysql_query ( $query ) or die ( mysql_error () );
+					}
 				}
 			}
 		}
@@ -521,5 +520,5 @@ class querys {
 	}
 }
 $r = new querys ();
-$r->updateArtists();
+$r->addCity('Isle of Man');
 ?>
