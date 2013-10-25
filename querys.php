@@ -495,7 +495,7 @@ class querys {
 		$r = $fb->searchLastFMArtist ( $artist ['name'] );
 		
 		if (isset ( $r ['name'] )) {
-			$this->updateArtist ( $artist ['id'], mysql_real_escape_string ( $r ['name'] ), $r ['placeformed'] );
+			$this->updateArtist ( $artist ['id'], mysql_real_escape_string ( $r ['name'] ), mysql_real_escape_string ( $r ['placeformed'] ) );
 			foreach ( $r ['similar'] ['artist'] as $similar ) {
 				$similar_id = $this->addSimilar ( mysql_real_escape_string ( $similar ['name'] ) );
 				$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
@@ -520,6 +520,6 @@ class querys {
 		}
 	}
 }
-$r = new querys();
+$r = new querys ();
 $r->updateArtists();
 ?>
