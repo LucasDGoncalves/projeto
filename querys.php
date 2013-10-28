@@ -519,6 +519,4 @@ class querys {
 		}
 	}
 }
-$r = new querys ();
-$r->addCity('Isle of Man');
 ?>
