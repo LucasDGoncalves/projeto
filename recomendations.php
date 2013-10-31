@@ -3,9 +3,11 @@ include_once "banco.php";
 class recomendations {
 	private $con;
 	private $stringArtists;
+	private $stringArtistsArray;
 	function __Construct($login) {
 		$this->con = new banco ();
 		$this->stringArtists = $this->getFavoriteArtistsIdString($login);
+		$this->stringArtistsArray = explode(', ',$this->stringArtists);
 	}
 	function generoPop($login) {
 		// cria cconecta ao banco
@@ -18,14 +20,16 @@ class recomendations {
 				join genero on artista_genero.id_genero = genero.id
 				where pessoa.login like '{$login}'
 				group by genero.id
-				order by count desc
-				limit 5";
+				order by count desc";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		$result1 = null;
 		$genero = Array();
 		$i=0;
 		$soma=0;
-		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+		while ( $rs = mysql_fetch_assoc ($res)) {
+			if ($i>=5 && $rs['count'] < 0.03*$soma){
+				break;
+			}
 			$genero[$i]['id'] = $rs['genre'];
 			$genero[$i]['count'] = $rs['count'];
 			$soma += $rs['count'];
@@ -44,7 +48,7 @@ class recomendations {
 			$result = array();
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 			while ( $rs = mysql_fetch_assoc ( $res ) ) {
-				$rs['valor'] = $rs['count'] * ($genero[$j]['count']/$soma); 
+				$rs['valor'] = (1+log($rs['count'])) * ($genero[$j]['count']/$soma); 
 				$result [] = $rs;
 			}
 			$genero [$j]['artistas'] = $result;
@@ -58,15 +62,24 @@ class recomendations {
 		// cria cconecta ao banco
 		$this->con->conecta ();
 		
-		$query = "select similar.descricao as nome, count(*) as count from curtida
+		$query = "select similar.descricao as nome, artista.id as artista_id, sum(nota) as soma from curtida
 				join artista_similar on curtida.id_artista = artista_similar.id_artista
 				join similar on artista_similar.id_similar = similar.id
+				left join artista on similar.descricao = artista.nome_artistico
 				where curtida.login like '{$login}'
 				group by artista_similar.id_similar
-				order by count desc";
+				order by soma desc";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
+		$max = null;
+		$result = array();
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			$result [] = $rs;
+			if ($rs["artista_id"] == NULL || !in_array($rs["artista_id"], $this->stringArtistsArray)){ 
+				if ($max == null){
+					$max = $rs['soma'];
+				}
+				$rs ['valor'] = $rs['soma']/$max;
+				$result [] = $rs;
+			}
 		}
 		
 		$this->con->fecha ();
@@ -85,10 +98,26 @@ class recomendations {
 				group by curtida.id_artista
 				order by peso desc";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
+		$result = null;
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
 			$result [] = $rs;
 		}
 	
+		$this->con->fecha ();
+		return $result;
+	}
+	
+	function newUserCase() {
+		// cria cconecta ao banco
+		$this->con->conecta ();
+	
+		$query = "select artista.id as artista_id, artista.nome_artistico as nome, count(*) as count from artista, curtida 
+		where artista.id = curtida.id_artista GROUP BY curtida.id_artista ORDER BY count desc LIMIT 10;";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+		$result = null;
+		while ( $rs = mysql_fetch_assoc ( $res ) ) {
+		$result [] = $rs;
+		}
 		$this->con->fecha ();
 		return $result;
 	}
@@ -100,13 +129,9 @@ class recomendations {
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		$favoriteArtists = array ();
 		$i = 0;
-		$string = null;
+		$string = '0';
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			if ($string == null){
-				$string = $rs ['id'];
-			}else{
-				$string .= ', '.$rs ['id'];
-			}
+			$string .= ', '.$rs ['id'];
 		}
 	
 		$this->con->fecha ();

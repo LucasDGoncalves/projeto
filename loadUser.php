@@ -44,10 +44,10 @@ echo "<div id='div-edit-buttons'>
 		<button id='button_save_edit' hidden>Salvar</button>
 		</div></div>";
 // echo "</div><div id='conteudo-3'>";
-echo "||separator||<div style='margin-left:150; float:right'>Artistas Favoritos: {$fieldArtists}</br><div id='new_artist' style='clear:both'>
+echo "||separator||<div id='liked' style='margin-left:150; float:right'>Artistas Favoritos: {$fieldArtists}</br><div id='new_artist' style='clear:both'>
 		<input type='text' id='new_artist_name' size='15' placeholder='uri do artista'/>
 			<select id='new_artist_rating' title='Nota'><option value=1>1</option><option value=2>2</option><option value=3>3</option><option value=4>4</option><option value=5>5</option></select>	
 <button id='add_artist_like'>Add</button><br>
-<button id='get_suggestions'>Gerar Recomendações</button></div></div>";
+<button onclick='show_suggestions(\"{$login}\")'>Ver Recomendações</button></div></div><div id='suggestions2' hidden='true=' style='margin-left:150; float:right'> aqui recomendacoes</div>";
 
 ?>

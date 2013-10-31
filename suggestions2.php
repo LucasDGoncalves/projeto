@@ -84,12 +84,12 @@ foreach ($vetor_pontos as $key => $artista){
 
 		
 echo "<br>";
-for ($i=0;$i<=9;$i++){
-	echo $i+1 .": ".$top10[$i]['nome']."</br>";
+for ($i=1;$i<=10;$i++){
+	echo "<div id='art-{$top10[$i-1]['id']}'>".$i .": ".$top10[$i-1]['nome']."<span style='position:absolute;right:100px;'> <button onclick='like_suggested(\"{$_POST['login']}\",{$top10[$i-1]['id']})'>Curtir</button></span></div></br>";
 }
 
 
-echo "<br><br><button onclick='$(\"#suggestions\").html(\"\")'>Fechar</button>";
+echo "<br><br><button onclick='$(\"#suggestions2\").html(\"\"); $(\"#liked\").show()'>Fechar</button>";
 
 function insereArtista($artista, $top10){
 

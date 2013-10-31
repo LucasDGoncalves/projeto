@@ -143,6 +143,36 @@ $(document).ready(
 				});
 
 			};
+			
+			show_suggestions = function(login) {
+				$("#liked").hide();
+				$("#suggestions2").show();
+				params = new Object();
+				params.login = login;
+				$.ajax({
+					type : 'POST',
+					url : "suggestions2.php",
+					data : params
+				}).done(function(msg) {
+					$("#suggestions2").html(msg);
+				});
+
+			};
+			
+			like_suggested = function(login, id_artist) {
+				$("#art-"+id_artist).hide();
+//				$("#suggestions2").show();
+//				params = new Object();
+//				params.login = login;
+//				$.ajax({
+//					type : 'POST',
+//					url : "suggestions2.php",
+//					data : params
+//				}).done(function(msg) {
+//					$("#suggestions2").html(msg);
+//				});
+
+			};
 
 			$('#conteudo-2').delegate('#button_cancel', 'click', function() {
 				// trocar botoes sendo mostrados

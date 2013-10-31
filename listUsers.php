@@ -23,7 +23,7 @@ echo "<div id='pager' class='pager'>
 Items: <input type='text' class='pagesize' value='20' size='1'/>
 </div></td></tr></tfoot></table></div>
 		<div id='suggestions' style='float:right'>
-		blablabla
+		&nbsp;
 		</div>";
 
 ?>
