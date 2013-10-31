@@ -41,8 +41,7 @@ class DataMining {
 			
 			$result ['name'] = $raw_result [0] ['name'];
 			$result ['notable'] = $raw_result [0] ['notable'] ['name'];
-			$result ['name2'] = $raw_result [1] ['name'];
-			$result ['notable2'] = $raw_result [1] ['notable'] ['name'];
+	
 			$i = 0;
 			foreach ( $raw_result [0] ['output'] ['/location/location/containedby'] ['/location/location/containedby'] as $genre ) {
 				$result ['containdby'] [$i] = $genre ['name'];
@@ -56,39 +55,16 @@ class DataMining {
 		$location ['city'] = $res ['name'];
 		if (strcmp ( $res ['notable'], 'City/Town/Village' ) == 0) {
 			$size = count ( $res ['containdby'] );
-			if (strcmp ( $res ['name'], $res ['name2'] ) == 0) {
-				if (strpos ( $res ['notable2'], 'state' ) !== false) {
-					$location ['state'] = $res ['name2'];
-				}
-			}
-			if ($location ['state'] == null || $location ['country'] == null) {
+			if ($location ['country'] == null) {
 				for($i = 0; $i < $size; $i ++) {
 					$query = $res ['containdby'] [$i];
-					$l = $this->getLocationInfo ( $query );
-					if (isset ( $l )) {
-						$location = array_merge ( $location, $l );
-					}
-					if ($location ['state'] !== null && $location ['country'] !== null) {
+					$res = $this->freeBaseLocation ( $query );
+					if (strcmp ( $res ['notable'], 'Country' ) == 0) {
+						$location ['country'] = $res ['name'];
 						break;
 					}
 				}
 			}
-			$location ['city'] = $res ['name'];
-		} elseif (strpos ( $res ['notable'], 'state' ) !== false) {
-			$location ['state'] = $res ['name'];
-			$size = count ( $res ['containdby'] );
-			for($i = 0; $i < $size; $i ++) {
-				$query = $res ['containdby'] [$i];
-				$l = $this->getLocationInfo ( $query );
-				if (isset ( $l )) {
-					$location = array_merge ( $location, $l );
-				}
-				if ($location ['country'] !== null) {
-					break;
-				}
-			}
-		} elseif (strcmp ( $res ['notable'], 'Country' ) == 0) {
-			$location ['country'] = $res ['name'];
 		}
 		return $location;
 	}
@@ -101,13 +77,11 @@ class DataMining {
 			$url .= '&api_key=' . $this->api_key_lastFM;
 			$url .= '&format=' . $data;
 			
-			echo $url.'<br>';
+			$json = file_get_contents ( $url );
+			$raw_result = json_decode ( $json, true );
+			$raw_result = $raw_result ['corrections'];
 			
-			$json = file_get_contents($url);
-			$raw_result = json_decode ($json, true);
- 			$raw_result = $raw_result['corrections'];
-			
- 			if (count($raw_result, 1) <= 1) {
+			if (count ( $raw_result, 1 ) <= 1) {
 				$result = $artist;
 			} else {
 				$result = $raw_result ['correction'] ['artist'] ['name'];
@@ -118,8 +92,8 @@ class DataMining {
 	}
 	public function searchLastFMArtist($artist, $data = 'json') {
 		if (! empty ( $artist )) {
-
-			$res = $this->searchLastFMCorrection ( $artist);
+			
+			$res = $this->searchLastFMCorrection ( $artist );
 			if (! empty ( $result )) {
 				$artist = $res;
 			}
@@ -135,6 +109,11 @@ class DataMining {
 			$result ['name'] = $raw_result ['name'];
 			$result ['similar'] = $raw_result ['similar'];
 			$result ['placeformed'] = $raw_result ['bio'] ['placeformed'];
+			$result['placeformed'] = explode(',', $result['placeformed'])[0]
+			
+			
+			
+			;
 		}
 		
 		return $result;

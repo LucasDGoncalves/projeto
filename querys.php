@@ -265,7 +265,7 @@ class querys {
 	function updateArtist($id, $name, $origin) {
 		$this->con->conecta ();
 		
-		$query = "UPDATE artista SET nome_artistico = '{$name}', pais = '{$origin}' where id = {$id}";
+		$query = "UPDATE artista SET nome_artistico = '{$name}', cidade = {$this->addCity($origin)} where id = {$id}";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		$this->con->fecha ();
 	}
@@ -280,7 +280,8 @@ class querys {
 		$i = 0;
 		while ( $rs = mysql_fetch_assoc ( $res ) ) {
 			$allArtists [$i] ['id'] = $rs ['id'];
-			$allArtists [$i ++] ['name'] = $rs ['nome_artistico'];
+			$allArtists [$i] ['name'] = $rs ['nome_artistico'];
+			$allArtists [$i ++] ['placeformed'] = $rs ['pais'];
 		}
 		
 		$this->con->fecha ();
@@ -364,16 +365,20 @@ class querys {
 		$this->con->conecta ();
 		
 		$city = mysql_real_escape_string ( $result ['city'] );
-		$query = "SELECT * FROM cidade WHERE nome like '{$city}'";
+		$query = "SELECT * FROM cidade WHERE descricao like '{$city}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
-		if (! isset ( $result ['country'] ))
-			$result ['country'] = null;
+		$country_id = $result ['country'];
+		if (! isset ( $country_id )) {
+			$country_id = 'null';
+		} else {
+			$country_id = $this->addCountry ( mysql_real_escape_string ( $result ['country'] ) );
+		}
 		
 		if (mysql_num_rows ( $res ) == 0) {
-			$query = "INSERT INTO cidade (nome,id_pais) VALUES ('{$result['city']}',{$this->addCounty($result['country'])}) ";
+			$query = "INSERT INTO cidade (descricao, pais_id) VALUES ('{$city}', {$country_id}) ";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 			
-			$query = "SELECT * FROM cidade WHERE nome like '{$city}'";
+			$query = "SELECT * FROM cidade WHERE descricao like '{$city}'";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 		}
 		$rs = mysql_fetch_assoc ( $res );
@@ -383,34 +388,20 @@ class querys {
 	// Se pais existe retorna id do pais, se não insere e retorna o id
 	function addCountry($country) {
 		$fb = new DataMining ();
-		$result = $fb->getLocationInfo ( $country );
 		$this->con->conecta ();
 		
-		$query = "SELECT * FROM pais WHERE nome like '{$result['country']}'";
+		$query = "SELECT * FROM pais WHERE descricao like '{$country}'";
 		$res = mysql_query ( $query ) or die ( mysql_error () );
 		
 		if (mysql_num_rows ( $res ) == 0) {
-			$query = "INSERT INTO pais (nome) VALUES ('{$result['country']}') ";
+			$query = "INSERT INTO pais (descricao) VALUES ('{$country}') ";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 			
-			$query = "SELECT * FROM pais WHERE nome like '{$result['country']}'";
+			$query = "SELECT * FROM pais WHERE descricao like '{$country}'";
 			$res = mysql_query ( $query ) or die ( mysql_error () );
 		}
 		$rs = mysql_fetch_assoc ( $res );
 		return $rs ['id'];
-	}
-	
-	// Se pais existe retorna id do pais, se não insere e retorna o id
-	function upDateLocale() {
-		$this->con->conecta ();
-		
-		while ( $rs = mysql_fetch_assoc ( $res ) ) {
-			// Pega primeiro elemento da string
-			
-			// insere cidade
-			
-			//insere id no artista
-		}
 	}
 	
 	// Adiciona gênero, se não existir, retorna o id
@@ -454,33 +445,36 @@ class querys {
 		$fb = new DataMining ();
 		$result = $this->getAllArtists ();
 		foreach ( $result as $artist ) {
-			$r = $fb->searchLastFMArtist ( $artist ['name'] );
+			// $r = $fb->searchLastFMArtist ( $artist ['name'] );
+			// if (isset ( $r ['name'] )) {
+			$artist['placeformed'] = explode(',', $artist['placeformed'])[0]
+			;
+			echo $artist ['name'] . "<br>";
+			$this->updateArtist ( $artist ['id'], mysql_real_escape_string ( $artist ['name'] ), $artist ['placeformed'] );
 			
-			if (isset ( $r ['name'] )) {
-				$this->updateArtist ( $artist ['id'], mysql_real_escape_string ( $r ['name'] ), mysql_real_escape_string ( $r ['placeformed'] ) );
-				foreach ( $r ['similar'] ['artist'] as $similar ) {
-					$similar_id = $this->addSimilar ( mysql_real_escape_string ( $similar ['name'] ) );
-					if (isset ( $similar_id )) {
-						$query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
-						$res = mysql_query ( $query ) or die ( mysql_error () );
-						if (mysql_num_rows ( $res ) == 0) {
-							$query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
-							mysql_query ( $query ) or die ( mysql_error () );
-						}
-					}
-				}
-				$r = $fb->searchFreeBaseGenre ( $r ['name'] );
-				foreach ( $r ['genre'] as $genre ) {
-					$genre_id = $this->addGenero ( $genre );
-					$query = "SELECT * FROM artista_genero WHERE id_artista = {$artist['id']} and id_genero = {$genre_id}";
-					$res = mysql_query ( $query ) or die ( mysql_error () );
-					
-					if (mysql_num_rows ( $res ) == 0) {
-						$query = "INSERT INTO artista_genero (id_artista,id_genero) VALUES ({$artist['id']},{$genre_id}) ";
-						mysql_query ( $query ) or die ( mysql_error () );
-					}
-				}
-			}
+			// foreach ( $r ['similar'] ['artist'] as $similar ) {
+			// $similar_id = $this->addSimilar ( mysql_real_escape_string ( $similar ['name'] ) );
+			// if (isset ( $similar_id )) {
+			// $query = "SELECT * FROM artista_similar WHERE id_artista = {$artist['id']} and id_similar = {$similar_id}";
+			// $res = mysql_query ( $query ) or die ( mysql_error () );
+			// if (mysql_num_rows ( $res ) == 0) {
+			// $query = "INSERT INTO artista_similar (id_artista,id_similar) VALUES ({$artist['id']},{$similar_id}) ";
+			// mysql_query ( $query ) or die ( mysql_error () );
+			// }
+			// }
+			// }
+			// $r = $fb->searchFreeBaseGenre ( $r ['name'] );
+			// foreach ( $r ['genre'] as $genre ) {
+			// $genre_id = $this->addGenero ( $genre );
+			// $query = "SELECT * FROM artista_genero WHERE id_artista = {$artist['id']} and id_genero = {$genre_id}";
+			// $res = mysql_query ( $query ) or die ( mysql_error () );
+			
+			// if (mysql_num_rows ( $res ) == 0) {
+			// $query = "INSERT INTO artista_genero (id_artista,id_genero) VALUES ({$artist['id']},{$genre_id}) ";
+			// mysql_query ( $query ) or die ( mysql_error () );
+			// }
+			// }
+			// }
 		}
 	}
 	
