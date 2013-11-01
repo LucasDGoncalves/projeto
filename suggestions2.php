@@ -85,7 +85,7 @@ foreach ($vetor_pontos as $key => $artista){
 		
 echo "<br>";
 for ($i=1;$i<=10;$i++){
-	echo "<div id='art-{$top10[$i-1]['id']}'>".$i .": ".$top10[$i-1]['nome']."<span style='position:absolute;right:100px;'> <button onclick='like_suggested(\"{$_POST['login']}\",{$top10[$i-1]['id']})'>Curtir</button></span></div></br>";
+	echo "<div id='art-{$top10[$i-1]['id']}'>".$i .": ".$top10[$i-1]['nome']."<span style='position:absolute;right:100px;'> <button onclick='like_suggested(\"{$_POST['login']}\",{$top10[$i-1]['id']},\"{$top10[$i-1]['nome']}\")'>Curtir</button></span></div></br>";
 }
 
 

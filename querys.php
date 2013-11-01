@@ -163,6 +163,22 @@ class querys {
 		}
 		return $res;
 	}
+
+	function addLikeId($user_login, $artist_id, $rating) {
+		$this->con->conecta ();
+	
+		$query = "SELECT * from curtida where login = '{$user_login}' and id_artista = '{$artist_id}'";
+		$res = mysql_query ( $query ) or die ( mysql_error () );
+	
+		if (mysql_num_rows ( $res ) == 0) {
+			$query = "INSERT into curtida (login, id_artista, nota) VALUES ('{$user_login}', '{$artist_id}', '{$rating}')";
+				
+			$res = mysql_query ( $query ) or die ( mysql_error () );
+		} else {
+			$res = false;
+		}
+		return $res;
+	}
 	
 	// Remove curtir
 	function deleteLike($user_login, $artist_uri) {
@@ -511,6 +527,8 @@ class querys {
 				mysql_query ( $query ) or die ( mysql_error () );
 			}
 		}
+		
+		return $artist['id'];
 	}
 }
 ?>

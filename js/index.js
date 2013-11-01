@@ -159,18 +159,19 @@ $(document).ready(
 
 			};
 			
-			like_suggested = function(login, id_artist) {
+			like_suggested = function(login, id_artist, name_artist) {
 				$("#art-"+id_artist).hide();
-//				$("#suggestions2").show();
-//				params = new Object();
-//				params.login = login;
-//				$.ajax({
-//					type : 'POST',
-//					url : "suggestions2.php",
-//					data : params
-//				}).done(function(msg) {
-//					$("#suggestions2").html(msg);
-//				});
+				params = new Object();
+				params.login = login;
+				params.artist_id = id_artist;
+				params.artist_name = name_artist;
+				$.ajax({
+					type : 'POST',
+					url : "suggestedArtistLike.php",
+					data : params
+				}).done(function(msg) {
+					alert(msg);
+				});
 
 			};
 
